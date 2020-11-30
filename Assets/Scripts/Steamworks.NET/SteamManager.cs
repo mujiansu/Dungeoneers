@@ -10,12 +10,14 @@
 
 using UnityEngine;
 using Steamworks;
+using Zenject;
+using System;
 
 //
 // The SteamManager provides a base implementation of Steamworks.NET on which you can build upon.
 // It handles the basics of starting up and shutting down the SteamAPI for use.
 //
-public class SteamManager
+public class SteamManager : IInitializable, ITickable, IDisposable
 {
     private bool _initalized = false;
     protected SteamAPIWarningMessageHook_t _warningMessageHook;
@@ -24,9 +26,8 @@ public class SteamManager
         Debug.LogWarning(pchDebugText);
     }
 
-    public SteamManager()
+    public void Initialize()
     {
-
         if (_initalized)
         {
             // This is almost always an error.
@@ -95,16 +96,7 @@ public class SteamManager
         }
     }
 
-    ~SteamManager()
-    {
-        if (_initalized)
-        {
-            SteamAPI.Shutdown();
-            _initalized = false;
-        }
-    }
-
-    public void RunCallbacks()
+    public void Tick()
     {
         if (!_initalized)
         {
@@ -114,4 +106,15 @@ public class SteamManager
         // Run Steam client callbacks
         SteamAPI.RunCallbacks();
     }
+
+    public void Dispose()
+    {
+        if (_initalized)
+        {
+            SteamAPI.Shutdown();
+            _initalized = false;
+        }
+    }
+
+
 }
