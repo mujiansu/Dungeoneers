@@ -64,7 +64,7 @@ public class SteamHelpers
     public static bool TryGetFriendsMetadata(out List<SteamFriendMetadata> friends)
     {
         friends = new List<SteamFriendMetadata>();
-        if (TryGetFriendIds(out List<CSteamID> friendIds)) return false;
+        if (!TryGetFriendIds(out List<CSteamID> friendIds)) return false;
         foreach (var friendId in friendIds)
         {
             SteamFriends.GetFriendGamePlayed(friendId, out FriendGameInfo_t friendGameInfo);

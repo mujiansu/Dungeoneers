@@ -14,7 +14,7 @@ public class FriendElement : MonoBehaviour
 
     public void SetFriendMetadata(SteamFriendMetadata metadata)
     {
-        _imgAvatar.sprite = Sprite.Create(metadata.Avatar, _imgAvatar.rectTransform.rect, Vector2.zero);
+        _imgAvatar.sprite = Sprite.Create(metadata.Avatar, new Rect(0, 0, metadata.Avatar.width, metadata.Avatar.height), Vector2.zero);
         _txtUsername.text = metadata.Name;
         _txtGameState.text = metadata.GameId.ToString();
     }
