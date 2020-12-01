@@ -2,12 +2,28 @@
 using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
+using static CanvasController;
 
 public class InviteMenuCanvas : MonoBehaviour
 {
     public VerticalLayoutGroup FriendGroup;
     public ScrollRect FriendScrollRect;
     public FriendElement FriendElementPrefab;
+    private CanvasController CanvasController;
+
+    public Button BackBtn;
+
+    private void Start() {
+        CanvasController = transform.parent.gameObject.GetComponent<CanvasController>();
+        BackBtn.onClick.AddListener(OnBackBtnClick);
+    }
+
+    private void OnBackBtnClick()
+    {
+        CanvasController.SwitchCanvas(CanvasType.StartMenu);
+    }
+
+    
 
     private void OnEnable()
     {
