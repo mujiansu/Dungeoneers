@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MessagePack;
 using Steamworks;
+using UnityEngine;
 
 public class SteamHelpers
 {
@@ -44,7 +45,77 @@ public class SteamHelpers
         return false;
     }
 
+    public static bool TryGetFriendIds(out List<CSteamID> friendIds)
+    {
+        var friendCount = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
+        var friendIdsList = new List<CSteamID>();
+        if (friendCount != -1)
+        {
+            for (var i = 0; i < friendCount; i++)
+            {
+                friendIdsList.Add(SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate));
+            }
+        }
+        friendIds = friendIdsList;
+        if (friendCount >= 0) return true;
+        return false;
+    }
+
+    public static bool TryGetFriendsMetadata(out List<SteamFriendMetadata> friends)
+    {
+        friends = new List<SteamFriendMetadata>();
+        if (TryGetFriendIds(out List<CSteamID> friendIds)) return false;
+        foreach (var friendId in friendIds)
+        {
+            SteamFriends.GetFriendGamePlayed(friendId, out FriendGameInfo_t friendGameInfo);
+            var friend = new SteamFriendMetadata
+            {
+                Name = SteamFriends.GetFriendPersonaName(friendId),
+                Avatar = GetSteamImageAsTexture2D(SteamFriends.GetSmallFriendAvatar(friendId)),
+            };
+            friend.GameId = friendGameInfo.m_gameID;
+            friend.lobbyId = friendGameInfo.m_steamIDLobby;
+            friends.Add(friend);
+        }
+        friends.Sort(delegate (SteamFriendMetadata a, SteamFriendMetadata b)
+        {
+            return a.Name.CompareTo(b.Name);
+        });
+        return true;
+    }
+
+    public static Texture2D GetSteamImageAsTexture2D(int image)
+    {
+        Texture2D ret = null;
+        uint ImageWidth;
+        uint ImageHeight;
+        bool bIsValid = SteamUtils.GetImageSize(image, out ImageWidth, out ImageHeight);
+
+        if (bIsValid)
+        {
+            byte[] Image = new byte[ImageWidth * ImageHeight * 4];
+
+            bIsValid = SteamUtils.GetImageRGBA(image, Image, (int)(ImageWidth * ImageHeight * 4));
+            if (bIsValid)
+            {
+                ret = new Texture2D((int)ImageWidth, (int)ImageHeight, TextureFormat.RGBA32, false, true);
+                ret.LoadRawTextureData(Image);
+                ret.Apply();
+            }
+        }
+
+        return ret;
+    }
+
     public enum PacketChannel
     {
     }
+}
+
+public class SteamFriendMetadata
+{
+    public string Name { get; set; }
+    public Texture2D Avatar { get; set; }
+    public CGameID GameId { get; set; }
+    public CSteamID lobbyId { get; set; }
 }
