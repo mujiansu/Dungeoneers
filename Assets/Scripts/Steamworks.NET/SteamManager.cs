@@ -102,7 +102,6 @@ public class SteamManager : IInitializable, ITickable, IDisposable
         {
             return;
         }
-        Debug.Log("Run Callbacks");
         // Run Steam client callbacks
         SteamAPI.RunCallbacks();
     }
