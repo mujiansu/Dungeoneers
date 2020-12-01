@@ -20,7 +20,7 @@ public class InviteMenuCanvas : MonoBehaviour
             {
                 var friendElement = Instantiate(FriendElementPrefab);
                 friendElement.SetFriendMetadata(friend);
-                friendElement.transform.parent = FriendGroup.transform;
+                friendElement.transform.SetParent(FriendGroup.transform);
             }
         }
     }
