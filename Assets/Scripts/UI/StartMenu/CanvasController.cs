@@ -6,12 +6,14 @@ public class CanvasController : MonoBehaviour
 {
     public Canvas InviteMenuCanvas;
     public Canvas StartMenuCanvas;
+    public Canvas ScoreScreenCanvas;
     private CanvasType _currentCanvas;
     public enum CanvasType
     {
         Closed,
         StartMenu,
-        InviteMenu
+        InviteMenu,
+        ScoreScreen
     }
 
     private Dictionary<CanvasType, Canvas> _canvases = new Dictionary<CanvasType, Canvas>();
@@ -19,6 +21,7 @@ public class CanvasController : MonoBehaviour
     {
         _canvases.Add(CanvasType.StartMenu, StartMenuCanvas);
         _canvases.Add(CanvasType.InviteMenu, InviteMenuCanvas);
+        _canvases.Add(CanvasType.ScoreScreen, ScoreScreenCanvas);
         SwitchCanvas(CanvasType.InviteMenu);
     }
 
