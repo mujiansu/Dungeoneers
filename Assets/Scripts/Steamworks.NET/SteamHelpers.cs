@@ -10,6 +10,8 @@ public class SteamHelpers
 
     public static CSteamID Me;
 
+    public static CGameID GameId;
+
     /// <summary>
     /// Register callback to steam
     /// </summary>
@@ -23,6 +25,8 @@ public class SteamHelpers
     public static void Init()
     {
         Me = SteamUser.GetSteamID();
+        SteamFriends.GetFriendGamePlayed(Me, out FriendGameInfo_t friendGameInfo);
+        GameId = friendGameInfo.m_gameID;
     }
 
     public static bool GetPacket<T>(out T packet, out CSteamID remoteId, PacketChannel channel)
@@ -75,12 +79,10 @@ public class SteamHelpers
             };
             friend.GameId = friendGameInfo.m_gameID;
             friend.lobbyId = friendGameInfo.m_steamIDLobby;
+            friend.State = SteamFriends.GetFriendPersonaState(friendId);
             friends.Add(friend);
         }
-        friends.Sort(delegate (SteamFriendMetadata a, SteamFriendMetadata b)
-        {
-            return a.Name.CompareTo(b.Name);
-        });
+
         return true;
     }
 
@@ -116,6 +118,7 @@ public class SteamFriendMetadata
 {
     public string Name { get; set; }
     public Texture2D Avatar { get; set; }
+    public EPersonaState State { get; set; }
     public CGameID GameId { get; set; }
     public CSteamID lobbyId { get; set; }
 }
