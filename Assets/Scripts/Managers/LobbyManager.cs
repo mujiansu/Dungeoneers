@@ -35,10 +35,15 @@ public class LobbyManager : IInitializable, IDisposable
     {
         _lobbyInviteReceivedEvent.Invoke(new LobbyInvite
         {
-            InviterId = (CSteamID)param.m_ulSteamIDUser,
+            Username = SteamFriends.GetFriendPersonaName((CSteamID)param.m_ulSteamIDUser),
             LobbyId = (CSteamID)param.m_ulSteamIDLobby
         });
         //UI, way to accept invites. TOASTS?
+    }
+
+    public void JoinLobby(CSteamID lobbyId)
+    {
+        SteamMatchmaking.JoinLobby(lobbyId);
     }
 
     private void OnLobbyJoinRequested(GameLobbyJoinRequested_t param)
@@ -98,7 +103,7 @@ public class LobbyInviteReceivedEvent : UnityEvent<LobbyInvite> { }
 
 public class LobbyInvite
 {
-    public CSteamID InviterId { get; set; }
+    public string Username { get; set; }
     public CSteamID LobbyId { get; set; }
 }
 
