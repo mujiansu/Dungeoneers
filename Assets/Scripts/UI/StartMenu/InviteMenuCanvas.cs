@@ -13,7 +13,8 @@ public class InviteMenuCanvas : MonoBehaviour
 
     public Button BackBtn;
 
-    private void Start() {
+    private void Start()
+    {
         CanvasController = transform.parent.gameObject.GetComponent<CanvasController>();
         BackBtn.onClick.AddListener(OnBackBtnClick);
     }
@@ -23,7 +24,7 @@ public class InviteMenuCanvas : MonoBehaviour
         CanvasController.SwitchCanvas(CanvasType.StartMenu);
     }
 
-    
+
 
     private void OnEnable()
     {

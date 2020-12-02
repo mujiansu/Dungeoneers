@@ -1,39 +1,128 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Steamworks;
+using UnityEngine;
 using Zenject;
 
 public class LobbyManager : IInitializable
 {
-    private SteamLobby _lobby;
+    public SteamLobby Lobby { get; private set; }
+    public readonly SignalBus SignalBus;
+    private const int _maxLobbySize = 10;
+
+    public class MembersUpdateSignal
+    {
+        public List<CSteamID> Members;
+    }
+
+    public class LobbyInviteReceivedSignal
+    {
+        public LobbyInvite LobbyInvite;
+    }
+
+    public LobbyManager(SignalBus signalBus)
+    {
+        SignalBus = signalBus;
+    }
+
     public void Initialize()
     {
         SteamHelpers.RegisterCallback<LobbyCreated_t>(OnLobbyCreated);
         SteamHelpers.RegisterCallback<LobbyEnter_t>(OnLobbyEntered);
         SteamHelpers.RegisterCallback<LobbyChatUpdate_t>(OnLobbyChatUpdate);
         SteamHelpers.RegisterCallback<GameLobbyJoinRequested_t>(OnLobbyJoinRequested);
-        _lobby = new SteamLobby();
+        SteamHelpers.RegisterCallback<LobbyInvite_t>(OnLobbyInvite);
+        Lobby = new SteamLobby();
+    }
+
+    private void OnLobbyInvite(LobbyInvite_t param)
+    {
+        SignalBus.Fire<LobbyInviteReceivedSignal>(new LobbyInviteReceivedSignal
+        {
+            LobbyInvite = new LobbyInvite
+            {
+                Username = SteamFriends.GetFriendPersonaName((CSteamID)param.m_ulSteamIDUser),
+                LobbyId = (CSteamID)param.m_ulSteamIDLobby
+            }
+        });
+    }
+
+    public async Task InviteToLobbyAsync(CSteamID userId)
+    {
+        if (!Lobby.IsInLobby)
+        {
+            var lobbyId = await SteamHelpers.CreateLobbyAsync(_maxLobbySize);
+            if (lobbyId.HasValue)
+            {
+                SteamMatchmaking.InviteUserToLobby(lobbyId.Value, userId);
+            }
+        }
+        else
+        {
+            SteamMatchmaking.InviteUserToLobby(Lobby.Id, userId);
+        }
+    }
+
+    public void JoinLobby(CSteamID lobbyId)
+    {
+        SteamMatchmaking.JoinLobby(lobbyId);
     }
 
     private void OnLobbyJoinRequested(GameLobbyJoinRequested_t param)
     {
-        throw new NotImplementedException();
+        SteamMatchmaking.JoinLobby(param.m_steamIDLobby);
     }
 
     private void OnLobbyChatUpdate(LobbyChatUpdate_t param)
     {
-        throw new NotImplementedException();
+        switch ((EChatMemberStateChange)param.m_rgfChatMemberStateChange)
+        {
+            case EChatMemberStateChange.k_EChatMemberStateChangeBanned:
+            case EChatMemberStateChange.k_EChatMemberStateChangeDisconnected:
+            case EChatMemberStateChange.k_EChatMemberStateChangeKicked:
+            case EChatMemberStateChange.k_EChatMemberStateChangeLeft:
+                Debug.Log($"{SteamFriends.GetFriendPersonaName((CSteamID)param.m_ulSteamIDUserChanged)} has left the game.");
+                if (param.m_ulSteamIDUserChanged != SteamHelpers.Me.m_SteamID)
+                {
+                    Lobby.SyncMemebers();
+                    //Closep2pSession
+                }
+                break;
+            case EChatMemberStateChange.k_EChatMemberStateChangeEntered:
+                Debug.Log($"{SteamFriends.GetFriendPersonaName((CSteamID)param.m_ulSteamIDUserChanged)} has joined the game.");
+                Lobby.SyncMemebers();
+                break;
+        }
     }
 
     private void OnLobbyEntered(LobbyEnter_t param)
     {
-        throw new NotImplementedException();
+        if (param.m_EChatRoomEnterResponse == (uint)EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess)
+        {
+            Lobby.EnterLobby((CSteamID)param.m_ulSteamIDLobby);
+            Debug.Log($"Entered {SteamFriends.GetFriendPersonaName(Lobby.Owner)} lobby.");
+
+        }
     }
 
     private void OnLobbyCreated(LobbyCreated_t param)
     {
-        throw new NotImplementedException();
+        if (param.m_eResult != EResult.k_EResultOK)
+        {
+            Debug.LogError("Failed to create lobby.");
+        }
+        else
+        {
+            Debug.Log("Created Lobby.");
+        }
     }
+}
+
+public class LobbyInvite
+{
+    public string Username { get; set; }
+    public CSteamID LobbyId { get; set; }
 }
 
 public class SteamLobby
@@ -48,8 +137,8 @@ public class SteamLobby
     {
         IsInLobby = false;
         IsOwnerMe = true;
-        Members = new List<CSteamID>();
         Owner = SteamHelpers.Me;
+        SyncMemebers();
     }
 
     public void LeaveLobby()
@@ -57,26 +146,35 @@ public class SteamLobby
         SteamMatchmaking.LeaveLobby(Id);
         Id = default(CSteamID);
         IsInLobby = false;
+        Owner = SteamHelpers.Me;
         IsOwnerMe = true;
-
+        SyncMemebers();
     }
 
     public void EnterLobby(CSteamID lobbyId)
     {
         Id = lobbyId;
         IsInLobby = true;
-        SyncMemebers();
         Owner = SteamMatchmaking.GetLobbyOwner(lobbyId);
         IsOwnerMe = Owner == SteamHelpers.Me;
+        SyncMemebers();
     }
 
     public void SyncMemebers()
     {
         var result = new List<CSteamID>();
-        var lobbyMemberCount = SteamMatchmaking.GetNumLobbyMembers(Id);
-        for (int i = 0; i < lobbyMemberCount; i++)
+        if (!IsInLobby)
         {
-            result.Add(SteamMatchmaking.GetLobbyMemberByIndex(Id, i));
+            result.Add(SteamHelpers.Me);
         }
+        else
+        {
+            var lobbyMemberCount = SteamMatchmaking.GetNumLobbyMembers(Id);
+            for (int i = 0; i < lobbyMemberCount; i++)
+            {
+                result.Add(SteamMatchmaking.GetLobbyMemberByIndex(Id, i));
+            }
+        }
+        Members = result;
     }
 }
