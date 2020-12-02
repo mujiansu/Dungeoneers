@@ -77,7 +77,7 @@ public class InviteMenuCanvas : MonoBehaviour
             {
                 var friendElement = _friendFactory.Create();
                 friendElement.SetFriendMetadata(friend);
-                friendElement.transform.SetParent(FriendGroup.transform);
+                friendElement.transform.SetParent(FriendGroup.transform, false);
             }
             FriendScrollRect.verticalNormalizedPosition = 1;
         }
