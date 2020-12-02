@@ -74,3 +74,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ToastPrefab: {fileID: 193554502, guid: 9d689e271e8996640bbe8cb2eb5ee08d, type: 3}
+  FriendElement: {fileID: 4903510652877122957, guid: 3616ecd07b84c034c89b10002d3cd7e2,
+    type: 3}

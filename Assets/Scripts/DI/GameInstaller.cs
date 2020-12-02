@@ -3,6 +3,7 @@
 public class GameInstaller : MonoInstaller
 {
     public Toast ToastPrefab;
+    public FriendElement FriendElement;
 
     public override void InstallBindings()
     {
@@ -12,5 +13,6 @@ public class GameInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<SteamManager>().AsSingle().NonLazy();
         Container.BindInterfacesAndSelfTo<LobbyManager>().AsSingle();
         Container.BindFactory<Toast, Toast.Factory>().FromComponentInNewPrefab(ToastPrefab);
+        Container.BindFactory<FriendElement, FriendElement.Factory>().FromComponentInNewPrefab(FriendElement);
     }
 }
