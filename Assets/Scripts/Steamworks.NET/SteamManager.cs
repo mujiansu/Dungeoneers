@@ -94,6 +94,7 @@ public class SteamManager : IInitializable, ITickable, IDisposable
             _warningMessageHook = new SteamAPIWarningMessageHook_t(SteamAPIDebugTextHook);
             SteamClient.SetWarningMessageHook(_warningMessageHook);
         }
+        SteamHelpers.Init();
     }
 
     public void Tick()
