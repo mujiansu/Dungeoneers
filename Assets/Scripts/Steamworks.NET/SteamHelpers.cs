@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using MessagePack;
 using Steamworks;
 using UnityEngine;
@@ -27,6 +29,31 @@ public class SteamHelpers
         Me = SteamUser.GetSteamID();
         SteamFriends.GetFriendGamePlayed(Me, out FriendGameInfo_t friendGameInfo);
         GameId = friendGameInfo.m_gameID;
+    }
+
+    public static async Task<CSteamID?> CreateLobbyAsync(int lobbySize)
+    {
+        CSteamID? result = null;
+        using (var waitHandle = new AutoResetEvent(false))
+        {
+            using (var callback = CallResult<LobbyCreated_t>.Create((lobbyId, bIOFailure) =>
+            {
+                if (lobbyId.m_eResult == EResult.k_EResultOK || !bIOFailure)
+                {
+                    result = (CSteamID)lobbyId.m_ulSteamIDLobby;
+                }
+                waitHandle.Set();
+            }))
+            {
+                var handle = SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypeFriendsOnly, lobbySize);
+                callback.Set(handle);
+                await Task.Run(() =>
+                {
+                    waitHandle.WaitOne();
+                });
+            }
+        }
+        return result;
     }
 
     public static bool GetPacket<T>(out T packet, out CSteamID remoteId, PacketChannel channel)
@@ -74,12 +101,13 @@ public class SteamHelpers
             SteamFriends.GetFriendGamePlayed(friendId, out FriendGameInfo_t friendGameInfo);
             var friend = new SteamFriendMetadata
             {
+                UserId = friendId,
                 Name = SteamFriends.GetFriendPersonaName(friendId),
                 Avatar = GetSteamImageAsTexture2D(SteamFriends.GetSmallFriendAvatar(friendId)),
+                GameId = friendGameInfo.m_gameID,
+                lobbyId = friendGameInfo.m_steamIDLobby,
+                State = SteamFriends.GetFriendPersonaState(friendId),
             };
-            friend.GameId = friendGameInfo.m_gameID;
-            friend.lobbyId = friendGameInfo.m_steamIDLobby;
-            friend.State = SteamFriends.GetFriendPersonaState(friendId);
             friends.Add(friend);
         }
 
@@ -116,6 +144,7 @@ public class SteamHelpers
 
 public class SteamFriendMetadata
 {
+    public CSteamID UserId { get; set; }
     public string Name { get; set; }
     public Texture2D Avatar { get; set; }
     public EPersonaState State { get; set; }

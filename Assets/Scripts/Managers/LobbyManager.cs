@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Steamworks;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,6 +11,8 @@ public class LobbyManager : IInitializable, IDisposable
     public SteamLobby Lobby { get; private set; }
     private MembersUpdateEvent _membersUpdateEvent = new MembersUpdateEvent();
     private LobbyInviteReceivedEvent _lobbyInviteReceivedEvent = new LobbyInviteReceivedEvent();
+
+    private const int _maxLobbySize = 10;
 
     public void SubscribeOnMembersUpdate(UnityAction<List<CSteamID>> callback)
     {
@@ -39,6 +42,22 @@ public class LobbyManager : IInitializable, IDisposable
             LobbyId = (CSteamID)param.m_ulSteamIDLobby
         });
         //UI, way to accept invites. TOASTS?
+    }
+
+    public async Task InviteToLobbyAsync(CSteamID userId)
+    {
+        if (!Lobby.IsInLobby)
+        {
+            var lobbyId = await SteamHelpers.CreateLobbyAsync(_maxLobbySize);
+            if (lobbyId.HasValue)
+            {
+                SteamMatchmaking.InviteUserToLobby(lobbyId.Value, userId);
+            }
+        }
+        else
+        {
+            SteamMatchmaking.InviteUserToLobby(Lobby.Id, userId);
+        }
     }
 
     public void JoinLobby(CSteamID lobbyId)
@@ -86,6 +105,10 @@ public class LobbyManager : IInitializable, IDisposable
         if (param.m_eResult != EResult.k_EResultOK)
         {
             Debug.LogError("Failed to create lobby.");
+        }
+        else
+        {
+            Debug.Log("Created Lobby.");
         }
     }
 
