@@ -6,48 +6,45 @@ public class Character : MonoBehaviour
     public float Speed = 1f;
 
     private PhysicsBody _physicsBody;
+    private Camera _playerCamera;
     private Renderer _renderer;
-    
-    
+    private PlayerInput _playerInput;
 
+    private Vector2 _moveLoc;
 
-    // Start is called before the first frame update
     void Start()
     {
+        _playerInput = GetComponent<PlayerInput>();
         _physicsBody = GetComponentInChildren<PhysicsBody>();
         _renderer = GetComponentInChildren<Renderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Vector2 vel = new Vector2();
-        if(Input.GetKey(KeyCode.W))
+        if(_playerInput.MovePlayer.ReadValue<float>()>0)
         {
-            vel.y += 1f;
+            _moveLoc = UnityEngine.Camera.main.ScreenToWorldPoint(_playerInput.MousePosition.ReadValue<Vector2>());        
         }
-        if(Input.GetKey(KeyCode.A))
-        {
-            vel.x -= 1f;
-        }
-        if(Input.GetKey(KeyCode.S))
-        {
-            vel.y -= 1f;
-        }
-        if(Input.GetKey(KeyCode.D))
-        {
-            vel.x += 1f;
-        }
-        _physicsBody.SetVelocity(vel.normalized*Speed);
+        
+
     }
 
-    //
     private void FixedUpdate() 
     {
-        
-       /* 
-        var pos = _transform.position;
-        pos.x += 0.01f;
-        _transform.position = pos;*/
+        Vector2 diff = _moveLoc-(Vector2)_physicsBody.transform.position;
+        var vel = diff.normalized*Speed;
+        if (diff.magnitude > vel.magnitude * Time.fixedDeltaTime)
+        {
+            _physicsBody.SetVelocity(vel);
+        }
+        else
+        {
+            _physicsBody.SetVelocity(Vector2.zero);
+        }
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(_moveLoc, 0.15f);
     }
 }

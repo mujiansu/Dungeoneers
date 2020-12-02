@@ -426,6 +426,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1175323024}
   - component: {fileID: 1175323025}
+  - component: {fileID: 1175323026}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -462,6 +463,58 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 4.5
+--- !u!114 &1175323026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175323023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5a2811675916fd48925d7457ab0f0b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MousePosition:
+    m_Name: Mouse Position
+    m_Type: 0
+    m_ExpectedControlType: Vector2
+    m_Id: 4741c704-a463-40cf-b5fb-bb9e50b43e0b
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 9fac7bfa-a237-4376-b21d-d2dccbc64e22
+      m_Path: <Mouse>/position
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Mouse Position
+      m_Flags: 0
+  MovePlayer:
+    m_Name: Move Player
+    m_Type: 1
+    m_ExpectedControlType: Button
+    m_Id: e4b742e1-8af3-45a3-b47e-4f2a064b2166
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 1449fad7-2a7a-4fbd-b34d-c3fdcd258d0b
+      m_Path: <Mouse>/rightButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Player
+      m_Flags: 0
+  Keystroke:
+    m_Name: Keystroke
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 05dfef66-c816-401e-91d1-41d318e076e5
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
 --- !u!1 &1501035999
 GameObject:
   m_ObjectHideFlags: 0
