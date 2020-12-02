@@ -3,25 +3,27 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Steamworks;
 using UnityEngine;
-using UnityEngine.Events;
 using Zenject;
 
-public class LobbyManager : IInitializable, IDisposable
+public class LobbyManager : IInitializable
 {
     public SteamLobby Lobby { get; private set; }
-    private MembersUpdateEvent _membersUpdateEvent = new MembersUpdateEvent();
-    private LobbyInviteReceivedEvent _lobbyInviteReceivedEvent = new LobbyInviteReceivedEvent();
-
+    public readonly SignalBus SignalBus;
     private const int _maxLobbySize = 10;
 
-    public void SubscribeOnMembersUpdate(UnityAction<List<CSteamID>> callback)
+    public class MembersUpdateSignal
     {
-        _membersUpdateEvent.AddListener(callback);
+        public List<CSteamID> Members;
     }
 
-    public void SubscribeOnLobbyInviteReceived(UnityAction<LobbyInvite> callback)
+    public class LobbyInviteReceivedSignal
     {
-        _lobbyInviteReceivedEvent.AddListener(callback);
+        public LobbyInvite LobbyInvite;
+    }
+
+    public LobbyManager(SignalBus signalBus)
+    {
+        SignalBus = signalBus;
     }
 
     public void Initialize()
@@ -36,12 +38,14 @@ public class LobbyManager : IInitializable, IDisposable
 
     private void OnLobbyInvite(LobbyInvite_t param)
     {
-        _lobbyInviteReceivedEvent.Invoke(new LobbyInvite
+        SignalBus.Fire<LobbyInviteReceivedSignal>(new LobbyInviteReceivedSignal
         {
-            Username = SteamFriends.GetFriendPersonaName((CSteamID)param.m_ulSteamIDUser),
-            LobbyId = (CSteamID)param.m_ulSteamIDLobby
+            LobbyInvite = new LobbyInvite
+            {
+                Username = SteamFriends.GetFriendPersonaName((CSteamID)param.m_ulSteamIDUser),
+                LobbyId = (CSteamID)param.m_ulSteamIDLobby
+            }
         });
-        //UI, way to accept invites. TOASTS?
     }
 
     public async Task InviteToLobbyAsync(CSteamID userId)
@@ -97,6 +101,8 @@ public class LobbyManager : IInitializable, IDisposable
         if (param.m_EChatRoomEnterResponse == (uint)EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess)
         {
             Lobby.EnterLobby((CSteamID)param.m_ulSteamIDLobby);
+            Debug.Log($"Entered {SteamFriends.GetFriendPersonaName(Lobby.Owner)} lobby.");
+
         }
     }
 
@@ -111,18 +117,7 @@ public class LobbyManager : IInitializable, IDisposable
             Debug.Log("Created Lobby.");
         }
     }
-
-    public void Dispose()
-    {
-        _membersUpdateEvent.RemoveAllListeners();
-    }
 }
-
-[System.Serializable]
-public class MembersUpdateEvent : UnityEvent<List<CSteamID>> { }
-
-[System.Serializable]
-public class LobbyInviteReceivedEvent : UnityEvent<LobbyInvite> { }
 
 public class LobbyInvite
 {

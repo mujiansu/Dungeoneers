@@ -8,7 +8,7 @@ public class ToastController : MonoBehaviour
     [Inject]
     public void Constructor(LobbyManager lobbyManager)
     {
-        lobbyManager.SubscribeOnLobbyInviteReceived(OnInviteRecieved);
+        lobbyManager.SignalBus.Subscribe<LobbyManager.LobbyInviteReceivedSignal>(OnInviteRecieved);
     }
 
     private void Start()
@@ -18,10 +18,10 @@ public class ToastController : MonoBehaviour
         Destroy(gameObject, 5f);
     }
 
-    private void OnInviteRecieved(LobbyInvite invite)
+    private void OnInviteRecieved(LobbyManager.LobbyInviteReceivedSignal invite)
     {
         var toast = Instantiate(Toast);
-        toast.SetData(invite.Username, invite.LobbyId);
+        toast.SetData(invite.LobbyInvite.Username, invite.LobbyInvite.LobbyId);
         if (transform.childCount == 1)
         {
             Destroy(transform.GetChild(0).transform.gameObject);

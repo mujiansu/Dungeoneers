@@ -30,9 +30,9 @@ public class FriendElement : MonoBehaviour
         _button.onClick.AddListener(OnBtnClick);
     }
 
-    private void OnBtnClick()
+    private async void OnBtnClick()
     {
-        _lobbyManager.InviteToLobbyAsync(_metadata.UserId);
+        await _lobbyManager.InviteToLobbyAsync(_metadata.UserId);
         _button.interactable = false;
     }
 
