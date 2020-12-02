@@ -2,6 +2,8 @@
 
 public class GameInstaller : MonoInstaller
 {
+    public Toast ToastPrefab;
+
     public override void InstallBindings()
     {
         SignalBusInstaller.Install(Container);
@@ -9,5 +11,6 @@ public class GameInstaller : MonoInstaller
         Container.DeclareSignal<LobbyManager.LobbyInviteReceivedSignal>();
         Container.BindInterfacesAndSelfTo<SteamManager>().AsSingle().NonLazy();
         Container.BindInterfacesAndSelfTo<LobbyManager>().AsSingle();
+        Container.BindFactory<Toast, Toast.Factory>().FromComponentInNewPrefab(ToastPrefab);
     }
 }

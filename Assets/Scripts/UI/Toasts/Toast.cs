@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿
 using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +12,8 @@ public class Toast : MonoBehaviour
 
     private CSteamID _lobbyId;
 
+    public class Factory : PlaceholderFactory<Toast> { }
+
     private LobbyManager _lobbyManager;
 
     [Inject]
@@ -26,6 +26,7 @@ public class Toast : MonoBehaviour
     {
         DeclineBtn.onClick.AddListener(OnDeclineBtnClicked);
         AcceptBtn.onClick.AddListener(OnAcceptBtnClicked);
+        Destroy(gameObject, 5f);
     }
 
     private void OnAcceptBtnClicked()

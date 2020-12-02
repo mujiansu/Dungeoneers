@@ -17,10 +17,10 @@ public class FriendElement : MonoBehaviour
 
     private SteamFriendMetadata _metadata;
 
+
     [Inject]
     public void Constructor(LobbyManager lobbyManager)
     {
-        Debug.Log("Inject");
         _lobbyManager = lobbyManager;
     }
 

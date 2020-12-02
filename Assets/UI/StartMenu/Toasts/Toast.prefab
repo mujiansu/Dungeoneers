@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25babad0c399e8a45ac808a7f2287b23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: {fileID: 0}
+  Text: {fileID: 6781347288724135633}
   DeclineBtn: {fileID: 6781347290244281997}
   AcceptBtn: {fileID: 6781347290478129139}
 --- !u!1 &6781347289035462626

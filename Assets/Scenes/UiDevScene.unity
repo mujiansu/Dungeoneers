@@ -1040,6 +1040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eae8b6e7cba6732459ef39f058b8c215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ToastPrefab: {fileID: 193554502, guid: 9d689e271e8996640bbe8cb2eb5ee08d, type: 3}
 --- !u!1 &953668300
 GameObject:
   m_ObjectHideFlags: 0
