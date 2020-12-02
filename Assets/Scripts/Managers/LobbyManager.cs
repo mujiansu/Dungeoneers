@@ -101,8 +101,6 @@ public class LobbyManager : IInitializable
         if (param.m_EChatRoomEnterResponse == (uint)EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess)
         {
             Lobby.EnterLobby((CSteamID)param.m_ulSteamIDLobby);
-            Debug.Log($"Entered {SteamFriends.GetFriendPersonaName(Lobby.Owner)} lobby.");
-
         }
     }
 
@@ -111,10 +109,6 @@ public class LobbyManager : IInitializable
         if (param.m_eResult != EResult.k_EResultOK)
         {
             Debug.LogError("Failed to create lobby.");
-        }
-        else
-        {
-            Debug.Log("Created Lobby.");
         }
     }
 }
