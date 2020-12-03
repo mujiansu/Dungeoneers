@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
@@ -31,20 +28,19 @@ public class Player : MonoBehaviour
 
     private void OnOpenMenuSignal()
     {
-
+        ToggleMenuAction.Disable();
     }
 
     private void OnCloseMenuSignal()
     {
-
+        ToggleMenuAction.Enable();
     }
 
     private void Update()
     {
         if (ToggleMenuAction.triggered)
         {
-            Debug.Log("ToggleMenu");
-            _gameManager.ToggleMenu();
+            _gameManager.OpenMenu();
         }
     }
 }

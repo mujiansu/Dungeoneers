@@ -2294,6 +2294,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea382379d93708b4ba7390d7c280a41d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EscapeAction:
+    m_Name: Escape
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: e8ab24c0-2a82-4a38-86f6-4d30beaebaca
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 1ae7115d-879f-4af8-9d2c-2c759090e433
+      m_Path: <Keyboard>/escape
+      m_Interactions: Press
+      m_Processors: 
+      m_Groups: 
+      m_Action: Escape
+      m_Flags: 0
   InviteMenuCanvas: {fileID: 1974752335237070860}
   StartMenuCanvas: {fileID: 1974752335451344692}
   ScoreScreenCanvas: {fileID: 1974752335415423868}
