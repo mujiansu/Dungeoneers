@@ -2,7 +2,7 @@
 
 public class Character : MonoBehaviour
 {
-    
+
     public float Speed = 1f;
 
     private PhysicsBody _physicsBody;
@@ -21,18 +21,16 @@ public class Character : MonoBehaviour
 
     void Update()
     {
-        if(_playerInput.MovePlayer.ReadValue<float>()>0)
+        if (_playerInput.MovePlayer.ReadValue<float>() > 0)
         {
-            _moveLoc = UnityEngine.Camera.main.ScreenToWorldPoint(_playerInput.MousePosition.ReadValue<Vector2>());        
+            _moveLoc = UnityEngine.Camera.main.ScreenToWorldPoint(_playerInput.MousePosition.ReadValue<Vector2>());
         }
-        
-
     }
 
-    private void FixedUpdate() 
+    private void FixedUpdate()
     {
-        Vector2 diff = _moveLoc-(Vector2)_physicsBody.transform.position;
-        var vel = diff.normalized*Speed;
+        Vector2 diff = _moveLoc - (Vector2)_physicsBody.transform.position;
+        var vel = diff.normalized * Speed;
         if (diff.magnitude > vel.magnitude * Time.fixedDeltaTime)
         {
             _physicsBody.SetVelocity(vel);
@@ -43,7 +41,8 @@ public class Character : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos() {
+    private void OnDrawGizmos()
+    {
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(_moveLoc, 0.15f);
     }

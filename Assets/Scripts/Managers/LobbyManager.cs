@@ -18,7 +18,7 @@ public class LobbyManager : IInitializable
 
     public class LobbyInviteReceivedSignal
     {
-        public LobbyInvite LobbyInvite;
+        public LobbyInvite LobbyInvite { get; set; }
     }
 
     public LobbyManager(SignalBus signalBus)
@@ -67,6 +67,11 @@ public class LobbyManager : IInitializable
     public void JoinLobby(CSteamID lobbyId)
     {
         SteamMatchmaking.JoinLobby(lobbyId);
+    }
+
+    public void LeaveLobby()
+    {
+        Lobby.LeaveLobby();
     }
 
     private void OnLobbyJoinRequested(GameLobbyJoinRequested_t param)

@@ -56,6 +56,12 @@ public class SteamHelpers
         return result;
     }
 
+    public static bool SendPacket<T>(CSteamID memberId, T data, PacketChannel packetChannel, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
+    {
+        var packet = MessagePackSerializer.Serialize(data);
+        return SteamNetworking.SendP2PPacket(memberId, packet, (uint)packet.Length, protocol, (int)packetChannel);
+    }
+
     public static bool GetPacket<T>(out T packet, out CSteamID remoteId, PacketChannel channel)
     {
         if (SteamNetworking.IsP2PPacketAvailable(out var packetSize, (int)channel))
@@ -137,9 +143,7 @@ public class SteamHelpers
         return ret;
     }
 
-    public enum PacketChannel
-    {
-    }
+
 }
 
 public class SteamFriendMetadata
