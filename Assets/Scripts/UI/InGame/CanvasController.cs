@@ -37,6 +37,7 @@ public class CanvasController : MonoBehaviour
             canvas.Value.transform.gameObject.SetActive(false);
         }
         _currentCanvas = CanvasType.Closed;
+        EscapeAction.Disable();
     }
 
     private void OnOpenMenuSignal()
@@ -76,8 +77,4 @@ public class CanvasController : MonoBehaviour
             }
         }
     }
-
-
-
-
 }
