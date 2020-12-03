@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class CanvasController : MonoBehaviour
 {
@@ -17,12 +19,30 @@ public class CanvasController : MonoBehaviour
     }
 
     private Dictionary<CanvasType, Canvas> _canvases = new Dictionary<CanvasType, Canvas>();
+
+    [Inject]
+    public void Constructor(GameManager _gameManager)
+    {
+        _gameManager.SignalBus.Subscribe<GameManager.OpenMenuSignal>(OnOpenMenuSignal);
+        _gameManager.SignalBus.Subscribe<GameManager.ClonseMenuSignal>(OnCloseMenuSignal);
+
+    }
+
+    private void OnCloseMenuSignal()
+    {
+        CloseCanvas();
+    }
+
+    private void OnOpenMenuSignal()
+    {
+        SwitchCanvas(CanvasType.StartMenu);
+    }
+
     void Start()
     {
         _canvases.Add(CanvasType.StartMenu, StartMenuCanvas);
         _canvases.Add(CanvasType.InviteMenu, InviteMenuCanvas);
         _canvases.Add(CanvasType.ScoreScreen, ScoreScreenCanvas);
-        SwitchCanvas(CanvasType.InviteMenu);
     }
 
     public void CloseCanvas()
