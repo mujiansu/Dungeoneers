@@ -10,6 +10,7 @@ public class NetworkingManager : ITickable
 
     public class PacketSignal<T>
     {
+        public CSteamID Sender { get; set; }
         public T Packet { get; set; }
     }
 
@@ -68,6 +69,7 @@ public class NetworkingManager : ITickable
         {
             SignalBus.Fire<PacketSignal<string>>(new PacketSignal<string>
             {
+                Sender = memberId,
                 Packet = test
             });
         }

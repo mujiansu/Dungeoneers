@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Steamworks;
+using UnityEngine;
 
 public class Character : MonoBehaviour
 {
@@ -12,12 +13,16 @@ public class Character : MonoBehaviour
 
     private Vector2 _moveLoc;
 
+    private CSteamID _owner;
+
     void Start()
     {
         _playerInput = GetComponent<PlayerInput>();
         _physicsBody = GetComponentInChildren<PhysicsBody>();
         _renderer = GetComponentInChildren<Renderer>();
+        _owner = GetComponentInParent<Player>().Owner;
     }
+
 
     void Update()
     {
@@ -29,15 +34,18 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 diff = _moveLoc - (Vector2)_physicsBody.transform.position;
-        var vel = diff.normalized * Speed;
-        if (diff.magnitude > vel.magnitude * Time.fixedDeltaTime)
+        if (_owner == SteamHelpers.Me)
         {
-            _physicsBody.SetVelocity(vel);
-        }
-        else
-        {
-            _physicsBody.SetVelocity(Vector2.zero);
+            Vector2 diff = _moveLoc - (Vector2)_physicsBody.transform.position;
+            var vel = diff.normalized * Speed;
+            if (diff.magnitude > vel.magnitude * Time.fixedDeltaTime)
+            {
+                _physicsBody.SetVelocity(vel);
+            }
+            else
+            {
+                _physicsBody.SetVelocity(Vector2.zero);
+            }
         }
     }
 

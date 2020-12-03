@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Steamworks;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
@@ -8,16 +9,24 @@ public class Player : MonoBehaviour
 
     private GameManager _gameManager;
 
+    public CSteamID Owner { get; private set; }
+
+    private Character _character;
+
+    public class Factory : PlaceholderFactory<CSteamID, Player> { }
+
     [Inject]
-    public void Constructor(GameManager gameManager)
+    public void Constructor(GameManager gameManager, CSteamID owner)
     {
+        Owner = owner;
         gameManager.SignalBus.Subscribe<GameManager.CloseMenuSignal>(OnCloseMenuSignal);
         gameManager.SignalBus.Subscribe<GameManager.OpenMenuSignal>(OnOpenMenuSignal);
         _gameManager = gameManager;
     }
 
-    private void Awake()
+    private void Start()
     {
+        var character = GetComponentInChildren<Character>();
         ToggleMenuAction.Enable();
     }
 
