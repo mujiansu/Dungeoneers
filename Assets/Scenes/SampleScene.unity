@@ -645,7 +645,7 @@ MonoBehaviour:
     - m_Name: 
       m_Id: a4206ea7-a176-47ac-b9cd-0a46b7929644
       m_Path: <Keyboard>/escape
-      m_Interactions: 
+      m_Interactions: Press
       m_Processors: 
       m_Groups: 
       m_Action: Toggle Menu
