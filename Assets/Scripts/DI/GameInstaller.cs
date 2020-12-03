@@ -12,7 +12,6 @@ public class GameInstaller : MonoInstaller
         Container.DeclareSignal<LobbyManager.LobbyInviteReceivedSignal>();
         Container.BindInterfacesAndSelfTo<SteamManager>().AsSingle().NonLazy();
         Container.BindInterfacesAndSelfTo<LobbyManager>().AsSingle();
-        Container.BindFactory<Toast, Toast.Factory>().FromComponentInNewPrefab(ToastPrefab);
-        Container.BindFactory<FriendElement, FriendElement.Factory>().FromComponentInNewPrefab(FriendElement);
+
     }
 }
