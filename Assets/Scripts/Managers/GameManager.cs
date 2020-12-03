@@ -5,9 +5,11 @@ public class GameManager : IInitializable, IDisposable, ITickable
 {
     public class OpenMenuSignal { }
 
-    public class ClonseMenuSignal { }
+    public class CloseMenuSignal { }
 
     public readonly SignalBus SignalBus;
+
+    private bool IsMenuOpen = false;
 
     public GameManager(SignalBus signalBus)
     {
@@ -15,12 +17,20 @@ public class GameManager : IInitializable, IDisposable, ITickable
     }
     public void OpenMenu()
     {
+        IsMenuOpen = true;
         SignalBus.Fire<OpenMenuSignal>();
     }
 
     public void CloseMenu()
     {
-        SignalBus.Fire<ClonseMenuSignal>();
+        IsMenuOpen = false;
+        SignalBus.Fire<CloseMenuSignal>();
+    }
+
+    public void ToggleMenu()
+    {
+        if (IsMenuOpen) CloseMenu();
+        else OpenMenu();
     }
 
 

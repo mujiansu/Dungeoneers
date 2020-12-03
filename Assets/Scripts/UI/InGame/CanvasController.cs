@@ -24,7 +24,7 @@ public class CanvasController : MonoBehaviour
     public void Constructor(GameManager _gameManager)
     {
         _gameManager.SignalBus.Subscribe<GameManager.OpenMenuSignal>(OnOpenMenuSignal);
-        _gameManager.SignalBus.Subscribe<GameManager.ClonseMenuSignal>(OnCloseMenuSignal);
+        _gameManager.SignalBus.Subscribe<GameManager.CloseMenuSignal>(OnCloseMenuSignal);
 
     }
 

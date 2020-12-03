@@ -6,6 +6,6 @@ public class GameSceneInstaller : MonoInstaller
     {
         Container.BindInterfacesAndSelfTo<GameManager>().AsSingle().NonLazy();
         Container.DeclareSignal<GameManager.OpenMenuSignal>();
-        Container.DeclareSignal<GameManager.ClonseMenuSignal>();
+        Container.DeclareSignal<GameManager.CloseMenuSignal>();
     }
 }
