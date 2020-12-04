@@ -72,7 +72,7 @@ public class NetworkingManager : ITickable
     public void Tick()
     {
 
-        while (RetrievePacket<PacketSignal<CharacterPacket>>())
+        while (RetrievePacket<CharacterPacket>())
         {
         }
     }
