@@ -29,6 +29,25 @@ public class GameManager : IInitializable, IDisposable, ITickable
         _playerFactory = playerFactory;
     }
 
+    public void Initialize()
+    {
+        _signalBus.Subscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
+        foreach (var member in _lobbyManager.Lobby.Members)
+        {
+            var player = _playerFactory.Create(member);
+            player.transform.SetParent(PlayersContainer.transform);
+        }
+    }
+
+    public void Dispose()
+    {
+        _signalBus.Unsubscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
+    }
+
+    public void Tick()
+    {
+    }
+
     private void OnMembersUpdateSignal()
     {
         foreach (var member in _lobbyManager.Lobby.Members)
@@ -63,25 +82,5 @@ public class GameManager : IInitializable, IDisposable, ITickable
     {
         if (IsMenuOpen) CloseMenu();
         else OpenMenu();
-    }
-
-
-    public void Initialize()
-    {
-        _signalBus.Subscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
-        foreach (var member in _lobbyManager.Lobby.Members)
-        {
-            var player = _playerFactory.Create(member);
-            player.transform.SetParent(PlayersContainer.transform);
-        }
-    }
-
-    public void Dispose()
-    {
-        _signalBus.Unsubscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
-    }
-
-    public void Tick()
-    {
     }
 }
