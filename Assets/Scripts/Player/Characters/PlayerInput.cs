@@ -19,12 +19,14 @@ public class PlayerInput : MonoBehaviour
     {
         MovePlayer.Enable();
         MousePosition.Enable();
+        Keystroke.Enable();
     }
 
     private void OnDisable() 
     {
         MovePlayer.Disable();
         MousePosition.Disable();
+        Keystroke.Disable();
     }
         // Update is called once per frame
     void Update()

@@ -16,6 +16,17 @@ public class Page : MonoBehaviour
         get;
         private set;
     }
+    public bool isOn
+    {
+        get
+        {
+            return _isOn;
+        }
+        private set
+        {
+            _isOn = value;
+        }
+    }
 
 #if UNITY_EDITOR
     public bool debugEnabled = true;
@@ -24,6 +35,7 @@ public class Page : MonoBehaviour
 #endif
 
     private Animator _animator;
+    private bool _isOn;
 
 #region Unity Functions
     private void OnEnable() 
@@ -46,6 +58,10 @@ public class Page : MonoBehaviour
             if(!_on)
             {
                 gameObject.SetActive(false);
+                isOn = false;
+            }
+            else{
+                isOn = true;
             }
         }
 
@@ -71,7 +87,11 @@ public class Page : MonoBehaviour
 
         if(!_on)
         {
-            gameObject.SetActive(false);
+            isOn = false;
+            gameObject.SetActive(false);    
+        }
+        else{
+            isOn = true;
         }
     }
 

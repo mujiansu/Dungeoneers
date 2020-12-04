@@ -29,6 +29,11 @@ public class PageController : MonoBehaviour
             {
                 TurnPageOn(EntryPage);
             }
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 #endregion
@@ -86,7 +91,17 @@ public class PageController : MonoBehaviour
         {
             TurnPageOn(_typeOn);
         }
+    }
 
+    public bool PageIsOn(PageType _type)
+    {
+        if(!PageExists(_type))
+        {
+            LogWarning("You are trying to detect if a page is on ["+_type+"], but it has not been registerd.");
+            return false;
+        } 
+
+        return GetPage(_type).isOn;
     }
 #endregion
 

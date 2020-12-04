@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,7 +7,12 @@ public class SceneController : MonoBehaviour
 { 
     public delegate void SceneLoadDelegate(SceneType _scene);
     public static SceneController instance;
-    public bool debugEnabled;
+    
+#if UNITY_EDITOR
+    public bool debugEnabled = true;
+#else
+    public bool debugEnabled = false;
+#endif
 
     private PageController _menu;
     private SceneType _targetScene;
@@ -58,9 +64,9 @@ public class SceneController : MonoBehaviour
 #endregion
 
 #region Public Functions
-    public void Load(SceneType _scene, SceneLoadDelegate _sceneLoadDelegate=null, bool _reload=false, PageType _loadingPage=PageType.None)
+    public void Load(SceneType _scene, SceneLoadDelegate _sceneLoadDelegate=null, bool _reload=false, PageType _loadingPage=PageType.NONE)
     {
-        if((_loadingPage != PageType.None && !menu) || !SceneCanBeLoaded(_scene,_reload))
+        if((_loadingPage != PageType.NONE && !menu) || !SceneCanBeLoaded(_scene,_reload))
         {
             return;
         }
@@ -111,15 +117,16 @@ public class SceneController : MonoBehaviour
             }
         }
 
-        if(_loadingPage != null)
+        if(_loadingPage != PageType.NONE)
         {
+            await Task.Delay(1000);
             menu.TurnPageOff(_loadingPage);
         }
     }
 
     private IEnumerator LoadScene()
     {
-        if (_loadingPage != PageType.None)
+        if (_loadingPage != PageType.NONE)
         {
             menu.TurnPageOn(_loadingPage);
             while (!menu.PageIsOn(_loadingPage))

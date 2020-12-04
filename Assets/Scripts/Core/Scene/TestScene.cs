@@ -5,17 +5,12 @@ using UnityEngine;
 public class TestScene : MonoBehaviour
 {
 
-    private PlayerInput _playerInput;
+    public PlayerInput userInput;
     public SceneController sceneController;
-
-    void Start()
-    {
-        _playerInput = GetComponent<PlayerInput>();
-    }
 
     void Update()
     {
-        if(_playerInput.Keystroke.ReadValue<float>()>0f)
+        if(userInput.Keystroke.ReadValue<float>()>0f)
         {
             
         }
