@@ -17,7 +17,7 @@ public class GameManager : IInitializable, IDisposable, ITickable
     private LobbyManager _lobbyManager;
     private Player.Factory _playerFactory;
 
-    private Dictionary<CSteamID, Player> _players;
+    private Dictionary<CSteamID, Player> _players = new Dictionary<CSteamID, Player>();
 
     private bool IsMenuOpen = false;
 
@@ -34,8 +34,10 @@ public class GameManager : IInitializable, IDisposable, ITickable
         _signalBus.Subscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
         foreach (var member in _lobbyManager.Lobby.Members)
         {
+
             var player = _playerFactory.Create(member);
             player.transform.SetParent(PlayersContainer.transform);
+            _players.Add(member, player);
         }
     }
 
@@ -56,6 +58,7 @@ public class GameManager : IInitializable, IDisposable, ITickable
             {
                 var playerInst = _playerFactory.Create(member);
                 playerInst.transform.SetParent(PlayersContainer.transform);
+                _players.Add(member, playerInst);
             }
         }
         _players.Where(x => !_lobbyManager.Lobby.Members.Contains(x.Key)).Select(x =>
