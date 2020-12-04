@@ -13,7 +13,7 @@ public class GameManager : IInitializable, IDisposable, ITickable
 
     public GameObject PlayersContainer;
 
-    public SignalBus SignalBus { get; private set; }
+    private SignalBus _signalBus;
     private LobbyManager _lobbyManager;
     private Player.Factory _playerFactory;
 
@@ -24,10 +24,9 @@ public class GameManager : IInitializable, IDisposable, ITickable
     [Inject]
     public void Constructor(SignalBus signalBus, LobbyManager lobbyManager, Player.Factory playerFactory)
     {
-        SignalBus = signalBus;
+        _signalBus = signalBus;
         _lobbyManager = lobbyManager;
         _playerFactory = playerFactory;
-        _lobbyManager.SignalBus.Subscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
     }
 
     private void OnMembersUpdateSignal()
@@ -51,13 +50,13 @@ public class GameManager : IInitializable, IDisposable, ITickable
     public void OpenMenu()
     {
         IsMenuOpen = true;
-        SignalBus.Fire<OpenMenuSignal>();
+        _signalBus.Fire<OpenMenuSignal>();
     }
 
     public void CloseMenu()
     {
         IsMenuOpen = false;
-        SignalBus.Fire<CloseMenuSignal>();
+        _signalBus.Fire<CloseMenuSignal>();
     }
 
     public void ToggleMenu()
@@ -69,6 +68,7 @@ public class GameManager : IInitializable, IDisposable, ITickable
 
     public void Initialize()
     {
+        _signalBus.Subscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
         foreach (var member in _lobbyManager.Lobby.Members)
         {
             var player = _playerFactory.Create(member);
@@ -78,7 +78,7 @@ public class GameManager : IInitializable, IDisposable, ITickable
 
     public void Dispose()
     {
-        _lobbyManager.SignalBus.Unsubscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
+        _signalBus.Unsubscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
     }
 
     public void Tick()

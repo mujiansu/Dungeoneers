@@ -8,7 +8,6 @@ public class Character : MonoBehaviour
 {
 
     public float Speed = 1f;
-
     private PhysicsBody _physicsBody;
     private Camera _playerCamera;
     private Renderer _renderer;
@@ -20,11 +19,13 @@ public class Character : MonoBehaviour
 
     private NetworkingManager _networkingManager;
 
+    private SignalBus _signalBus;
+
     [Inject]
-    public void Constructor(NetworkingManager networkingManager)
+    public void Constructor(SignalBus signalBus, NetworkingManager networkingManager)
     {
         _networkingManager = networkingManager;
-        _networkingManager.SignalBus.Subscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
+        _signalBus = signalBus;
     }
 
     private void OnCharacterPacket(PacketSignal<CharacterPacket> packet)
@@ -37,6 +38,7 @@ public class Character : MonoBehaviour
 
     void Start()
     {
+        _signalBus.Subscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
         _playerInput = GetComponent<PlayerInput>();
         _physicsBody = GetComponentInChildren<PhysicsBody>();
         _renderer = GetComponentInChildren<Renderer>();
@@ -78,5 +80,11 @@ public class Character : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(_moveLoc, 0.15f);
+    }
+
+    private void OnDestroy()
+    {
+        _signalBus.Unsubscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
+
     }
 }

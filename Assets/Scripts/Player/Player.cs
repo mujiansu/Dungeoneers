@@ -17,11 +17,11 @@ public class Player : MonoBehaviour
 
 
     [Inject]
-    public void Constructor(CSteamID owner, GameManager gameManager)
+    public void Constructor(CSteamID owner, GameManager gameManager, SignalBus signalBus)
     {
         Owner = owner;
-        gameManager.SignalBus.Subscribe<GameManager.CloseMenuSignal>(OnCloseMenuSignal);
-        gameManager.SignalBus.Subscribe<GameManager.OpenMenuSignal>(OnOpenMenuSignal);
+        signalBus.Subscribe<GameManager.CloseMenuSignal>(OnCloseMenuSignal);
+        signalBus.Subscribe<GameManager.OpenMenuSignal>(OnOpenMenuSignal);
         _gameManager = gameManager;
     }
 

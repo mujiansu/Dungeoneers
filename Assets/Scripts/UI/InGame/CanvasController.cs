@@ -23,10 +23,10 @@ public class CanvasController : MonoBehaviour
     private GameManager _gameManager;
 
     [Inject]
-    public void Constructor(GameManager gameManager)
+    public void Constructor(GameManager gameManager, SignalBus signalBus)
     {
-        gameManager.SignalBus.Subscribe<GameManager.OpenMenuSignal>(OnOpenMenuSignal);
-        gameManager.SignalBus.Subscribe<GameManager.CloseMenuSignal>(OnCloseMenuSignal);
+        signalBus.Subscribe<GameManager.OpenMenuSignal>(OnOpenMenuSignal);
+        signalBus.Subscribe<GameManager.CloseMenuSignal>(OnCloseMenuSignal);
         _gameManager = gameManager;
     }
 
