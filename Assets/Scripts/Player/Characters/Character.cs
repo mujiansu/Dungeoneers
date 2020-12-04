@@ -75,7 +75,14 @@ public class Character : MonoBehaviour
         {
             Pos = _physicsBody.Pos
         };
-        _networkingManager.SendPacketToAllPlayers<CharacterPacket>(packet, EP2PSend.k_EP2PSendUnreliable);
+        try
+        {
+            _networkingManager.SendPacketToAllPlayers<CharacterPacket>(packet, EP2PSend.k_EP2PSendUnreliable);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.ToString());
+        }
     }
 
     private void OnDrawGizmos()
