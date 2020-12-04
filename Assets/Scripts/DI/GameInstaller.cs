@@ -18,6 +18,6 @@ public class GameInstaller : MonoInstaller
 
     private void DeclarePacketSignals()
     {
-        Container.DeclareSignal<NetworkingManager.PacketSignal<string>>();
+        Container.DeclareSignal<NetworkingManager.PacketSignal<CharacterPacket>>();
     }
 }

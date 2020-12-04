@@ -1,5 +1,8 @@
-﻿using Steamworks;
+﻿using System;
+using Steamworks;
 using UnityEngine;
+using Zenject;
+using static NetworkingManager;
 
 public class Character : MonoBehaviour
 {
@@ -14,6 +17,23 @@ public class Character : MonoBehaviour
     private Vector2 _moveLoc;
 
     private CSteamID _owner;
+
+    private NetworkingManager _networkingManager;
+
+    [Inject]
+    public void Constructor(NetworkingManager networkingManager)
+    {
+        _networkingManager = networkingManager;
+        _networkingManager.SignalBus.Subscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
+    }
+
+    private void OnCharacterPacket(PacketSignal<CharacterPacket> packet)
+    {
+        if (_owner == packet.Sender)
+        {
+            _physicsBody.SetPosition(packet.Data.Pos);
+        }
+    }
 
     void Start()
     {
@@ -47,6 +67,15 @@ public class Character : MonoBehaviour
                 _physicsBody.SetVelocity(Vector2.zero);
             }
         }
+    }
+
+    private void LateUpdate()
+    {
+        var packet = new CharacterPacket
+        {
+            Pos = _physicsBody.Pos
+        };
+        _networkingManager.SendPacketToAllPlayers<CharacterPacket>(packet, EP2PSend.k_EP2PSendUnreliable);
     }
 
     private void OnDrawGizmos()

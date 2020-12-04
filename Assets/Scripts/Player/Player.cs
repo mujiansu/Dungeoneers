@@ -15,8 +15,9 @@ public class Player : MonoBehaviour
 
     public class Factory : PlaceholderFactory<CSteamID, Player> { }
 
+
     [Inject]
-    public void Constructor(GameManager gameManager, CSteamID owner)
+    public void Constructor(CSteamID owner, GameManager gameManager)
     {
         Owner = owner;
         gameManager.SignalBus.Subscribe<GameManager.CloseMenuSignal>(OnCloseMenuSignal);

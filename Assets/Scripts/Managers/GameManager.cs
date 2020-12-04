@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Steamworks;
 using UnityEngine;
 using Zenject;
 
@@ -14,6 +17,8 @@ public class GameManager : IInitializable, IDisposable, ITickable
     private LobbyManager _lobbyManager;
     private Player.Factory _playerFactory;
 
+    private Dictionary<CSteamID, Player> _players;
+
     private bool IsMenuOpen = false;
 
     [Inject]
@@ -22,6 +27,25 @@ public class GameManager : IInitializable, IDisposable, ITickable
         SignalBus = signalBus;
         _lobbyManager = lobbyManager;
         _playerFactory = playerFactory;
+        _lobbyManager.SignalBus.Subscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
+    }
+
+    private void OnMembersUpdateSignal()
+    {
+        foreach (var member in _lobbyManager.Lobby.Members)
+        {
+            if (!_players.ContainsKey(member))
+            {
+                var playerInst = _playerFactory.Create(member);
+                playerInst.transform.SetParent(PlayersContainer.transform);
+            }
+        }
+        _players.Where(x => !_lobbyManager.Lobby.Members.Contains(x.Key)).Select(x =>
+        {
+            GameObject.Destroy(x.Value.gameObject);
+            _players.Remove(x.Key);
+            return x.Key;
+        });
     }
 
     public void OpenMenu()

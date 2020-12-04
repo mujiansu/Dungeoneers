@@ -3,6 +3,7 @@
 public class PhysicsBody : MonoBehaviour
 {
     private Rigidbody2D _rigidBody;
+    public Vector2 Pos => _rigidBody.position;
     // Start is called before the first frame update
     void Awake()
     {
@@ -19,6 +20,11 @@ public class PhysicsBody : MonoBehaviour
     public void SetVelocity(Vector2 vel)
     {
         _rigidBody.velocity = vel;
+    }
+
+    public void SetPosition(Vector2 pos)
+    {
+        _rigidBody.position = pos;
     }
 
 
