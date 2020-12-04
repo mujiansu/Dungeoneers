@@ -12,7 +12,7 @@ public class TestPage : MonoBehaviour
         if(userInput.Keystroke.triggered)
         {
             Debug.Log("Key was pressed");
-            if(pageController.PageIsOn(PageType.MENU))
+            if(!pageController.PageIsOn(PageType.MENU))
             {
                 pageController.TurnPageOn(PageType.MENU);
             }

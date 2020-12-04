@@ -46,7 +46,7 @@ public class PageController : MonoBehaviour
 
         if(!PageExists(_type))
         {
-            LogWarning("You are trying to turn a page on ["+_type+"] that has not been registerd.");
+            LogWarning("You are trying to turn a page on ["+_type+"] that has not been registered.");
             return;
         }
 
@@ -62,7 +62,7 @@ public class PageController : MonoBehaviour
 
         if(!PageExists(_typeOff))
         {
-            LogWarning("You are trying to turn a page off ["+_typeOff+"] that has not been registerd.");
+            LogWarning("You are trying to turn a page off ["+_typeOff+"] that has not been registered.");
             return;
         } 
 
@@ -78,7 +78,7 @@ public class PageController : MonoBehaviour
         }
         else if(!PageExists(_typeOff))
         {
-            LogWarning("You are trying to turn a page on ["+_typeOn+"] that has not been registerd.");
+            LogWarning("You are trying to turn a page on ["+_typeOn+"] that has not been registered.");
             return;
         } 
 
@@ -97,7 +97,7 @@ public class PageController : MonoBehaviour
     {
         if(!PageExists(_type))
         {
-            LogWarning("You are trying to detect if a page is on ["+_type+"], but it has not been registerd.");
+            LogWarning("You are trying to detect if a page is on ["+_type+"], but it has not been registered.");
             return false;
         } 
 
@@ -137,7 +137,7 @@ public class PageController : MonoBehaviour
     {
         if(!PageExists(_type))
         {
-            LogWarning("You are trying to get a page ["+_type+"] that has not been registerd.");
+            LogWarning("You are trying to get a page ["+_type+"] that has not been registered.");
             return null;
         }
 
