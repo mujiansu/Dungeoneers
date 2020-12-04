@@ -26,6 +26,7 @@ public class NetworkingManager : ITickable
         SteamHelpers.RegisterCallback<P2PSessionConnectFail_t>(OnP2PSessionFailed);
         _lobbyManager = lobbyManager;
         _packetDictionary.Add(typeof(CharacterPacket), PacketChannel.Test);
+        MessagePack.Resolvers.StaticCompositeResolver.Instance.Register(MessagePack.Unity.UnityResolver.Instance);
     }
 
 
