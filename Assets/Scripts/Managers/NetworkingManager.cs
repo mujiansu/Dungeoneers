@@ -8,7 +8,7 @@ public class NetworkingManager : ITickable
 {
 
     private LobbyManager _lobbyManager;
-    public SignalBus SignalBus;
+    private SignalBus _signalBus;
 
     private Dictionary<Type, PacketChannel> _packetDictionary = new Dictionary<Type, PacketChannel>();
 
@@ -21,7 +21,7 @@ public class NetworkingManager : ITickable
     [Inject]
     public void Constructor(SignalBus signalBus, LobbyManager lobbyManager)
     {
-        SignalBus = signalBus;
+        _signalBus = signalBus;
         SteamHelpers.RegisterCallback<P2PSessionRequest_t>(OnP2PSessionRequest);
         SteamHelpers.RegisterCallback<P2PSessionConnectFail_t>(OnP2PSessionFailed);
         _lobbyManager = lobbyManager;
@@ -82,7 +82,7 @@ public class NetworkingManager : ITickable
         var result = SteamHelpers.GetPacket(out T packet, out var memberId, _packetDictionary[typeof(T)]);
         if (result)
         {
-            SignalBus.Fire<PacketSignal<T>>(new PacketSignal<T>
+            _signalBus.Fire<PacketSignal<T>>(new PacketSignal<T>
             {
                 Sender = memberId,
                 Data = packet
