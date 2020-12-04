@@ -6,19 +6,13 @@ public class SceneController : MonoBehaviour
 { 
     public delegate void SceneLoadDelegate(SceneType _scene);
     public static SceneController instance;
-    
-#if UNITY_EDITOR
-    public bool debugEnabled = true;
-#else
-    public bool debugEnabled = false;
-#endif
+    public bool debugEnabled;
 
-    
+    private PageController _menu;
     private SceneType _targetScene;
+    private PageType _loadingPage;
     private SceneLoadDelegate _sceneLoadDelegate;
     private bool _sceneIsLoading;
-    private PageType _loadingPage;
-    private PageController _menu;
     private PageController menu
     {
         get 
