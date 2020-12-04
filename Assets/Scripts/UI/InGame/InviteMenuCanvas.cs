@@ -2,6 +2,7 @@
 using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 using static CanvasController;
 
 public class InviteMenuCanvas : MonoBehaviour
@@ -9,9 +10,16 @@ public class InviteMenuCanvas : MonoBehaviour
     public VerticalLayoutGroup FriendGroup;
     public ScrollRect FriendScrollRect;
     public FriendElement FriendElementPrefab;
-    private CanvasController CanvasController;
-
     public Button BackBtn;
+
+    private CanvasController CanvasController;
+    private FriendElement.Factory _friendFactory;
+
+    [Inject]
+    public void Constructor(FriendElement.Factory friendFactory)
+    {
+        _friendFactory = friendFactory;
+    }
 
     private void Start()
     {
@@ -23,8 +31,6 @@ public class InviteMenuCanvas : MonoBehaviour
     {
         CanvasController.SwitchCanvas(CanvasType.StartMenu);
     }
-
-
 
     private void OnEnable()
     {
@@ -69,9 +75,9 @@ public class InviteMenuCanvas : MonoBehaviour
             });
             foreach (var friend in friends)
             {
-                var friendElement = Instantiate(FriendElementPrefab);
+                var friendElement = _friendFactory.Create();
                 friendElement.SetFriendMetadata(friend);
-                friendElement.transform.SetParent(FriendGroup.transform);
+                friendElement.transform.SetParent(FriendGroup.transform, false);
             }
             FriendScrollRect.verticalNormalizedPosition = 1;
         }

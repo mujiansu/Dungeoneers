@@ -18,7 +18,7 @@ public class LobbyManager : IInitializable
 
     public class LobbyInviteReceivedSignal
     {
-        public LobbyInvite LobbyInvite;
+        public LobbyInvite LobbyInvite { get; set; }
     }
 
     public LobbyManager(SignalBus signalBus)
@@ -69,6 +69,11 @@ public class LobbyManager : IInitializable
         SteamMatchmaking.JoinLobby(lobbyId);
     }
 
+    public void LeaveLobby()
+    {
+        Lobby.LeaveLobby();
+    }
+
     private void OnLobbyJoinRequested(GameLobbyJoinRequested_t param)
     {
         SteamMatchmaking.JoinLobby(param.m_steamIDLobby);
@@ -101,8 +106,6 @@ public class LobbyManager : IInitializable
         if (param.m_EChatRoomEnterResponse == (uint)EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess)
         {
             Lobby.EnterLobby((CSteamID)param.m_ulSteamIDLobby);
-            Debug.Log($"Entered {SteamFriends.GetFriendPersonaName(Lobby.Owner)} lobby.");
-
         }
     }
 
@@ -111,10 +114,6 @@ public class LobbyManager : IInitializable
         if (param.m_eResult != EResult.k_EResultOK)
         {
             Debug.LogError("Failed to create lobby.");
-        }
-        else
-        {
-            Debug.Log("Created Lobby.");
         }
     }
 }

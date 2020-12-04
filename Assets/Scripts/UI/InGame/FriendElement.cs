@@ -17,6 +17,8 @@ public class FriendElement : MonoBehaviour
 
     private SteamFriendMetadata _metadata;
 
+    public class Factory : PlaceholderFactory<FriendElement> { }
+
 
     [Inject]
     public void Constructor(LobbyManager lobbyManager)
