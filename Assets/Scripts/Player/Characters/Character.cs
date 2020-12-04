@@ -48,10 +48,14 @@ public class Character : MonoBehaviour
 
     void Update()
     {
-        if (_playerInput.MovePlayer.ReadValue<float>() > 0)
+        if (_owner == SteamHelpers.Me)
         {
-            _moveLoc = UnityEngine.Camera.main.ScreenToWorldPoint(_playerInput.MousePosition.ReadValue<Vector2>());
+            if (_playerInput.MovePlayer.ReadValue<float>() > 0)
+            {
+                _moveLoc = UnityEngine.Camera.main.ScreenToWorldPoint(_playerInput.MousePosition.ReadValue<Vector2>());
+            }
         }
+
     }
 
     private void FixedUpdate()
