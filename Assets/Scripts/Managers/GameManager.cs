@@ -78,6 +78,7 @@ public class GameManager : IInitializable, IDisposable, ITickable
 
     public void Dispose()
     {
+        _lobbyManager.SignalBus.Unsubscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
     }
 
     public void Tick()

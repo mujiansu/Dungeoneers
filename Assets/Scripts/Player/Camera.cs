@@ -8,13 +8,13 @@ public class Camera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        var charPos = Renderer.transform.position;  
-        transform.position = new Vector3(charPos.x,charPos.y, transform.position.z);
+        var charPos = Renderer.transform.position;
+        transform.position = new Vector3(charPos.x, charPos.y, transform.position.z);
     }
 }

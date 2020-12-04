@@ -24,7 +24,7 @@ public class PhysicsBody : MonoBehaviour
 
     public void SetPosition(Vector2 pos)
     {
-        _rigidBody.position = pos;
+        _rigidBody.MovePosition(pos);
     }
 
 

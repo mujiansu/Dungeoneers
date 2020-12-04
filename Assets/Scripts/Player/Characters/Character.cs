@@ -66,22 +66,11 @@ public class Character : MonoBehaviour
             {
                 _physicsBody.SetVelocity(Vector2.zero);
             }
-        }
-    }
-
-    private void LateUpdate()
-    {
-        var packet = new CharacterPacket
-        {
-            Pos = _physicsBody.Pos
-        };
-        try
-        {
+            var packet = new CharacterPacket
+            {
+                Pos = _physicsBody.Pos
+            };
             _networkingManager.SendPacketToAllPlayers<CharacterPacket>(packet, EP2PSend.k_EP2PSendUnreliable);
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.ToString());
         }
     }
 
