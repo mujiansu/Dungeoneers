@@ -1,12 +1,16 @@
 ﻿using Zenject;
-
-public class InGameUiInstaller : MonoInstaller
+namespace Dugeoneer.Ui.InGame
 {
-    public Toast ToastPrefab;
-    public FriendElement FriendElement;
-    public override void InstallBindings()
+    public class InGameUiInstaller : MonoInstaller
     {
-        Container.BindFactory<Toast, Toast.Factory>().FromComponentInNewPrefab(ToastPrefab);
-        Container.BindFactory<FriendElement, FriendElement.Factory>().FromComponentInNewPrefab(FriendElement);
+        public Toast ToastPrefab;
+        public FriendElement FriendElement;
+        public override void InstallBindings()
+        {
+            Container.BindFactory<Toast, Toast.Factory>().FromComponentInNewPrefab(ToastPrefab);
+            Container.BindFactory<FriendElement, FriendElement.Factory>().FromComponentInNewPrefab(FriendElement);
+        }
     }
 }
+
+
