@@ -5,6 +5,7 @@ using Zenject;
 
 public class Player : MonoBehaviour
 {
+    public class Factory : PlaceholderFactory<CSteamID, Player> { }
     public InputAction ToggleMenuAction;
 
     private GameManager _gameManager;
@@ -12,9 +13,6 @@ public class Player : MonoBehaviour
     public CSteamID Owner { get; private set; }
 
     private Character _character;
-
-    public class Factory : PlaceholderFactory<CSteamID, Player> { }
-
 
     [Inject]
     public void Constructor(CSteamID owner, GameManager gameManager, SignalBus signalBus)

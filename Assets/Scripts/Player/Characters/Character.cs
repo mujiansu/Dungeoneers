@@ -9,7 +9,7 @@ public class Character : MonoBehaviour
 
     public float Speed = 1f;
     private PhysicsBody _physicsBody;
-    private Camera _playerCamera;
+    private PlayerCamera _playerCamera;
     private Renderer _renderer;
     private PlayerInput _playerInput;
 
