@@ -388,6 +388,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e401e634d592b84d9bd3dbc6837950e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Renderer: {fileID: 1795533917346333920}
-  PhysicsBody: {fileID: 1795533917406786070}
-  Character: {fileID: 1795533918179920267}
