@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Steamworks;
 using UnityEngine;
 using Zenject;
@@ -13,6 +13,8 @@ public class Character : MonoBehaviour
     private PlayerInput _playerInput;
 
     private Vector2 _moveLoc;
+    private Vector2 _mouseLoc;
+    private bool _playerIsMoving;
 
     private CSteamID _owner;
 
