@@ -13,6 +13,7 @@ namespace Dungeoneer.DI
             Container.DeclareSignal<LobbyManager.LobbyInviteReceivedSignal>();
             DeclarePacketSignals();
             Container.BindInterfacesAndSelfTo<SteamManager>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<SceneChangingManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<LobbyManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<NetworkingManager>().AsSingle();
         }
