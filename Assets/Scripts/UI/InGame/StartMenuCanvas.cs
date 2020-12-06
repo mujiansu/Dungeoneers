@@ -3,27 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class StartMenuCanvas : MonoBehaviour
+namespace Dugeoneer.Ui.InGame
 {
-    public Button InviteBtn;
-    private CanvasController _canvasController;
-
-    // Start is called before the first frame update
-    void Start()
+    public class StartMenuCanvas : MonoBehaviour
     {
-        _canvasController = transform.parent.gameObject.GetComponent<CanvasController>();
-        InviteBtn.onClick.AddListener(OnInviteBtnClick);
+        public Button InviteBtn;
+        private CanvasController _canvasController;
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            _canvasController = transform.parent.gameObject.GetComponent<CanvasController>();
+            InviteBtn.onClick.AddListener(OnInviteBtnClick);
+        }
+
+        private void OnInviteBtnClick()
+        {
+            _canvasController.SwitchCanvas(CanvasController.CanvasType.InviteMenu);
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
     }
 
-    private void OnInviteBtnClick()
-    {
-        _canvasController.SwitchCanvas(CanvasController.CanvasType.InviteMenu);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }
+

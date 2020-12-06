@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Dugeoneer.Players.Characters;
 using UnityEngine;
 
 public class TestScene : MonoBehaviour
@@ -10,9 +11,9 @@ public class TestScene : MonoBehaviour
 
     void Update()
     {
-        if(userInput.Keystroke.ReadValue<float>()>0f)
+        if (userInput.Keystroke.ReadValue<float>() > 0f)
         {
-            
+
         }
     }
 }
