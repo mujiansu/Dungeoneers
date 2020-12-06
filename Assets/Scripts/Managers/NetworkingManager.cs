@@ -1,4 +1,6 @@
-﻿using Steamworks;
+﻿using System;
+using System.Collections.Generic;
+using Steamworks;
 using UnityEngine;
 using Zenject;
 
@@ -6,21 +8,26 @@ public class NetworkingManager : ITickable
 {
 
     private LobbyManager _lobbyManager;
-    public SignalBus SignalBus;
+    private SignalBus _signalBus;
+
+    private Dictionary<Type, PacketChannel> _packetDictionary = new Dictionary<Type, PacketChannel>();
 
     public class PacketSignal<T>
     {
-        public T Packet { get; set; }
+        public CSteamID Sender { get; set; }
+        public T Data { get; set; }
     }
 
-
-    public NetworkingManager(SignalBus signalBus, LobbyManager lobbyManager)
+    [Inject]
+    public void Constructor(SignalBus signalBus, LobbyManager lobbyManager)
     {
-        SignalBus = signalBus;
+        _signalBus = signalBus;
         SteamHelpers.RegisterCallback<P2PSessionRequest_t>(OnP2PSessionRequest);
         SteamHelpers.RegisterCallback<P2PSessionConnectFail_t>(OnP2PSessionFailed);
         _lobbyManager = lobbyManager;
+        _packetDictionary.Add(typeof(CharacterPacket), PacketChannel.Test);
     }
+
 
     private void OnP2PSessionFailed(P2PSessionConnectFail_t param)
     {
@@ -44,33 +51,44 @@ public class NetworkingManager : ITickable
         SteamNetworking.CloseP2PSessionWithUser(memberId);
     }
 
-    public void SendPacketToAllPlayers<T>(T data, PacketChannel channel, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
+    public void SendPacketToAllPlayers<T>(T data, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
     {
         foreach (var member in _lobbyManager.Lobby.Members)
         {
-            SendPacketToPlayer(member, data, channel, protocol);
+            SendPacketToPlayer(member, data, protocol);
         }
     }
 
-    public void SendPacketToPlayer<T>(CSteamID member, T data, PacketChannel channel, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
+    public void SendPacketToPlayer<T>(CSteamID member, T data, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
     {
-        if (member != SteamHelpers.Me) SteamHelpers.SendPacket(member, data, channel, protocol);
+        if (member != SteamHelpers.Me) SteamHelpers.SendPacket(member, data, _packetDictionary[typeof(T)], protocol);
     }
 
-    public void SendPacketToHost<T>(T data, PacketChannel channel, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
+    public void SendPacketToHost<T>(T data, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
     {
-        if (_lobbyManager.Lobby.IsOwnerMe) SendPacketToPlayer(_lobbyManager.Lobby.Owner, data, channel, protocol);
+        if (_lobbyManager.Lobby.IsOwnerMe) SendPacketToPlayer(_lobbyManager.Lobby.Owner, data, protocol);
     }
 
     public void Tick()
     {
-        while (SteamHelpers.GetPacket(out string test, out var memberId, PacketChannel.Test))
+
+        while (RetrievePacket<CharacterPacket>())
         {
-            SignalBus.Fire<PacketSignal<string>>(new PacketSignal<string>
+        }
+    }
+
+    public bool RetrievePacket<T>()
+    {
+        var result = SteamHelpers.GetPacket(out T packet, out var memberId, _packetDictionary[typeof(T)]);
+        if (result)
+        {
+            _signalBus.Fire<PacketSignal<T>>(new PacketSignal<T>
             {
-                Packet = test
+                Sender = memberId,
+                Data = packet
             });
         }
+        return result;
     }
 }
 

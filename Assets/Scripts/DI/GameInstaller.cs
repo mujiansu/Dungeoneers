@@ -2,13 +2,10 @@
 
 public class GameInstaller : MonoInstaller
 {
-    public Toast ToastPrefab;
-    public FriendElement FriendElement;
-
     public override void InstallBindings()
     {
         SignalBusInstaller.Install(Container);
-        Container.DeclareSignal<LobbyManager.MembersUpdateSignal>();
+        Container.DeclareSignal<LobbyManager.MembersUpdateSignal>().OptionalSubscriber();
         Container.DeclareSignal<LobbyManager.LobbyInviteReceivedSignal>();
         DeclarePacketSignals();
         Container.BindInterfacesAndSelfTo<SteamManager>().AsSingle().NonLazy();
@@ -18,6 +15,6 @@ public class GameInstaller : MonoInstaller
 
     private void DeclarePacketSignals()
     {
-        Container.DeclareSignal<NetworkingManager.PacketSignal<string>>();
+        Container.DeclareSignal<NetworkingManager.PacketSignal<CharacterPacket>>();
     }
 }

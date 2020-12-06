@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Steamworks;
+using UnityEngine;
 using Zenject;
 
 public class GameManager : IInitializable, IDisposable, ITickable
@@ -7,42 +11,79 @@ public class GameManager : IInitializable, IDisposable, ITickable
 
     public class CloseMenuSignal { }
 
-    public readonly SignalBus SignalBus;
+    public GameObject PlayersContainer;
+
+    private SignalBus _signalBus;
+    private LobbyManager _lobbyManager;
+    private Player.Factory _playerFactory;
+
+    private Dictionary<CSteamID, Player> _players = new Dictionary<CSteamID, Player>();
 
     private bool IsMenuOpen = false;
 
-    public GameManager(SignalBus signalBus)
+    [Inject]
+    public void Constructor(SignalBus signalBus, LobbyManager lobbyManager, Player.Factory playerFactory)
     {
-        SignalBus = signalBus;
+        _signalBus = signalBus;
+        _lobbyManager = lobbyManager;
+        _playerFactory = playerFactory;
     }
+
+    public void Initialize()
+    {
+        _signalBus.Subscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
+        foreach (var member in _lobbyManager.Lobby.Members)
+        {
+
+            var player = _playerFactory.Create(member);
+            player.transform.SetParent(PlayersContainer.transform);
+            _players.Add(member, player);
+        }
+    }
+
+    public void Dispose()
+    {
+        _signalBus.Unsubscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
+    }
+
+    public void Tick()
+    {
+    }
+
+    private void OnMembersUpdateSignal()
+    {
+        foreach (var member in _lobbyManager.Lobby.Members)
+        {
+            if (!_players.ContainsKey(member))
+            {
+                var playerInst = _playerFactory.Create(member);
+                playerInst.transform.SetParent(PlayersContainer.transform);
+                _players.Add(member, playerInst);
+            }
+        }
+        _players.Where(x => !_lobbyManager.Lobby.Members.Contains(x.Key)).Select(x =>
+        {
+            GameObject.Destroy(x.Value.gameObject);
+            _players.Remove(x.Key);
+            return x.Key;
+        });
+    }
+
     public void OpenMenu()
     {
         IsMenuOpen = true;
-        SignalBus.Fire<OpenMenuSignal>();
+        _signalBus.Fire<OpenMenuSignal>();
     }
 
     public void CloseMenu()
     {
         IsMenuOpen = false;
-        SignalBus.Fire<CloseMenuSignal>();
+        _signalBus.Fire<CloseMenuSignal>();
     }
 
     public void ToggleMenu()
     {
         if (IsMenuOpen) CloseMenu();
         else OpenMenu();
-    }
-
-
-    public void Initialize()
-    {
-    }
-
-    public void Dispose()
-    {
-    }
-
-    public void Tick()
-    {
     }
 }

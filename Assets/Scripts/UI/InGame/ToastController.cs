@@ -5,12 +5,18 @@ public class ToastController : MonoBehaviour
 {
     public Toast Toast;
     private Toast.Factory _toastFactory;
+    private SignalBus _signalBus;
 
     [Inject]
-    public void Constructor(LobbyManager lobbyManager, Toast.Factory toastFactory)
+    public void Constructor(SignalBus signalBus, Toast.Factory toastFactory)
     {
-        lobbyManager.SignalBus.Subscribe<LobbyManager.LobbyInviteReceivedSignal>(OnInviteRecieved);
+        _signalBus = signalBus;
         _toastFactory = toastFactory;
+    }
+
+    private void Start()
+    {
+        _signalBus.Subscribe<LobbyManager.LobbyInviteReceivedSignal>(OnInviteRecieved);
     }
 
     private void OnInviteRecieved(LobbyManager.LobbyInviteReceivedSignal invite)
@@ -22,5 +28,10 @@ public class ToastController : MonoBehaviour
             Destroy(transform.GetChild(0).transform.gameObject);
         }
         toast.transform.SetParent(transform, false);
+    }
+
+    private void OnDestroy()
+    {
+        _signalBus.Unsubscribe<LobbyManager.LobbyInviteReceivedSignal>(OnInviteRecieved);
     }
 }

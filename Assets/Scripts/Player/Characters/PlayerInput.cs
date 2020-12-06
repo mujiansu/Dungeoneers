@@ -12,29 +12,29 @@ public class PlayerInput : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
-    private void OnEnable() 
+    private void OnEnable()
     {
         MovePlayer.Enable();
         MousePosition.Enable();
         Keystroke.Enable();
     }
 
-    private void OnDisable() 
+    private void OnDisable()
     {
         MovePlayer.Disable();
         MousePosition.Disable();
         Keystroke.Disable();
     }
-        // Update is called once per frame
+    // Update is called once per frame
     void Update()
     {
 
     }
-    private void FixedUpdate() 
+    private void FixedUpdate()
     {
-        
+
     }
 }

@@ -1,24 +1,34 @@
-﻿using UnityEngine;
+﻿using Steamworks;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
 public class Player : MonoBehaviour
 {
+    public class Factory : PlaceholderFactory<CSteamID, Player> { }
     public InputAction ToggleMenuAction;
 
     private GameManager _gameManager;
 
+    public CSteamID Owner { get; private set; }
+
+    private Character _character;
+
     [Inject]
-    public void Constructor(GameManager gameManager)
+    public void Constructor(CSteamID owner, GameManager gameManager, SignalBus signalBus)
     {
-        gameManager.SignalBus.Subscribe<GameManager.CloseMenuSignal>(OnCloseMenuSignal);
-        gameManager.SignalBus.Subscribe<GameManager.OpenMenuSignal>(OnOpenMenuSignal);
+        Owner = owner;
+        signalBus.Subscribe<GameManager.CloseMenuSignal>(OnCloseMenuSignal);
+        signalBus.Subscribe<GameManager.OpenMenuSignal>(OnOpenMenuSignal);
         _gameManager = gameManager;
     }
 
-    private void Awake()
+    private void Start()
     {
-        ToggleMenuAction.Enable();
+        if (Owner == SteamHelpers.Me)
+        {
+            ToggleMenuAction.Enable();
+        }
     }
 
     private void OnDisable()

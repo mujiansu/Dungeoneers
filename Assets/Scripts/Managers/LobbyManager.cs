@@ -8,7 +8,7 @@ using Zenject;
 public class LobbyManager : IInitializable
 {
     public SteamLobby Lobby { get; private set; }
-    public readonly SignalBus SignalBus;
+    public SignalBus _signalBus;
     private const int _maxLobbySize = 10;
 
     public class MembersUpdateSignal
@@ -21,9 +21,10 @@ public class LobbyManager : IInitializable
         public LobbyInvite LobbyInvite { get; set; }
     }
 
-    public LobbyManager(SignalBus signalBus)
+    [Inject]
+    public void Constructor(SignalBus signalBus)
     {
-        SignalBus = signalBus;
+        _signalBus = signalBus;
     }
 
     public void Initialize()
@@ -33,12 +34,12 @@ public class LobbyManager : IInitializable
         SteamHelpers.RegisterCallback<LobbyChatUpdate_t>(OnLobbyChatUpdate);
         SteamHelpers.RegisterCallback<GameLobbyJoinRequested_t>(OnLobbyJoinRequested);
         SteamHelpers.RegisterCallback<LobbyInvite_t>(OnLobbyInvite);
-        Lobby = new SteamLobby();
+        Lobby = new SteamLobby(_signalBus);
     }
 
     private void OnLobbyInvite(LobbyInvite_t param)
     {
-        SignalBus.Fire<LobbyInviteReceivedSignal>(new LobbyInviteReceivedSignal
+        _signalBus.Fire<LobbyInviteReceivedSignal>(new LobbyInviteReceivedSignal
         {
             LobbyInvite = new LobbyInvite
             {
@@ -132,8 +133,11 @@ public class SteamLobby
     public List<CSteamID> Members { get; set; }
     public CSteamID Owner { get; set; }
 
-    public SteamLobby()
+    private SignalBus _signalBus;
+
+    public SteamLobby(SignalBus signalBus)
     {
+        _signalBus = signalBus;
         IsInLobby = false;
         IsOwnerMe = true;
         Owner = SteamHelpers.Me;
@@ -175,5 +179,6 @@ public class SteamLobby
             }
         }
         Members = result;
+        _signalBus.Fire<LobbyManager.MembersUpdateSignal>();
     }
 }
