@@ -78,7 +78,7 @@ public class @ControlConfig : IInputActionCollection, IDisposable
                     ""name"": """",
                     ""id"": ""e8ac62ee-13d9-4173-a207-96873e7c47b4"",
                     ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""OpenGameMenu"",

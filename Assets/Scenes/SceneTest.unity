@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49b0631f7c6ebf94abf046d859074a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  userInput: {fileID: 1084823234}
+  userInput: {fileID: 0}
   pageController: {fileID: 1626415229}
 --- !u!114 &173489384
 MonoBehaviour:
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14c2ecfa9a4b6f64b853206dcc30ebf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  userInput: {fileID: 1084823234}
+  userInput: {fileID: 0}
   sceneController: {fileID: 1626415228}
 --- !u!114 &173489385
 MonoBehaviour:
@@ -1391,7 +1391,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1084823233}
   - component: {fileID: 1084823235}
-  - component: {fileID: 1084823234}
   - component: {fileID: 1084823236}
   m_Layer: 0
   m_Name: Character
@@ -1416,74 +1415,6 @@ Transform:
   m_Father: {fileID: 520237794}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1084823234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1084823232}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5a2811675916fd48925d7457ab0f0b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MousePosition:
-    m_Name: Mouse Position
-    m_Type: 0
-    m_ExpectedControlType: Vector2
-    m_Id: 4741c704-a463-40cf-b5fb-bb9e50b43e0b
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 9fac7bfa-a237-4376-b21d-d2dccbc64e22
-      m_Path: <Mouse>/position
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Mouse Position
-      m_Flags: 0
-  MovePlayer:
-    m_Name: Move Player
-    m_Type: 1
-    m_ExpectedControlType: Button
-    m_Id: e4b742e1-8af3-45a3-b47e-4f2a064b2166
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 1449fad7-2a7a-4fbd-b34d-c3fdcd258d0b
-      m_Path: <Mouse>/rightButton
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move Player
-      m_Flags: 0
-  Keystroke:
-    m_Name: Keystroke
-    m_Type: 1
-    m_ExpectedControlType: Button
-    m_Id: 05dfef66-c816-401e-91d1-41d318e076e5
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 6e7b2d11-c5bd-442a-b8cc-0a24cb08d89b
-      m_Path: <Keyboard>/escape
-      m_Interactions: Press
-      m_Processors: 
-      m_Groups: 
-      m_Action: Keystroke
-      m_Flags: 0
-    - m_Name: 
-      m_Id: 23031769-2da6-47c6-8989-c068b7edcd79
-      m_Path: <Keyboard>/backquote
-      m_Interactions: Press
-      m_Processors: 
-      m_Groups: 
-      m_Action: Keystroke
-      m_Flags: 0
 --- !u!114 &1084823235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1554,7 +1485,18 @@ MonoBehaviour:
     m_ActionId: ed39f642-448d-4e38-8443-598e8d6f4132
     m_ActionName: Controls.Player/MovePlayer[/Mouse/rightButton]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1084823235}
+        m_MethodName: onOpenGameMenu
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: d56bc429-7762-4ed3-9b76-01cfd44997df
     m_ActionName: Controls.Player/OpenGameMenu[/Keyboard/escape]
   - m_PersistentCalls:

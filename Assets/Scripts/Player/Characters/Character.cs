@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Character : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class Character : MonoBehaviour
     private PlayerInput _playerInput;
 
     private Vector2 _moveLoc;
+    private Vector2 _mouseLoc;
+    private bool _playerIsMoving;
 
     void Start()
     {
@@ -21,9 +24,9 @@ public class Character : MonoBehaviour
 
     void Update()
     {
-        if (_playerInput.MovePlayer.ReadValue<float>() > 0)
+        if (_playerIsMoving)
         {
-            _moveLoc = UnityEngine.Camera.main.ScreenToWorldPoint(_playerInput.MousePosition.ReadValue<Vector2>());
+            _moveLoc = _mouseLoc;
         }
     }
 
@@ -46,4 +49,40 @@ public class Character : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(_moveLoc, 0.15f);
     }
+
+#region Input Callback Functions
+    public void onMousePosition(InputAction.CallbackContext context)
+    {
+        _mouseLoc = UnityEngine.Camera.main.ScreenToWorldPoint(context.ReadValue<Vector2>());
+    }
+
+    public void onMovePlayer(InputAction.CallbackContext context)
+    {
+        if(context.started)
+        {
+            _playerIsMoving = true;
+        }
+        else if(context.canceled)
+        {
+            _playerIsMoving = false;
+        }
+    }
+
+    public void onOpenGameMenu(InputAction.CallbackContext context)
+    {
+        if(context.action.triggered)
+        {
+            PageController pageController = PageController.instance;
+            if(!pageController.PageIsOn(PageType.MENU))
+            {
+                pageController.TurnPageOn(PageType.MENU);
+            }
+            else
+            {
+                pageController.TurnPageOff(PageType.MENU);
+            }
+        }
+    }
+#endregion
+
 }

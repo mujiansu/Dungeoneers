@@ -163,5 +163,4 @@ public class PageController : MonoBehaviour
         Debug.LogWarning("[Page Controller]:"+_msg);
     }
 #endregion
-
 }
