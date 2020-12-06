@@ -10,7 +10,6 @@ public class Character : MonoBehaviour
     public float Speed = 1f;
     private PhysicsBody _physicsBody;
     private PlayerCamera _playerCamera;
-    private Renderer _renderer;
     private PlayerInput _playerInput;
 
     private Vector2 _moveLoc;
@@ -22,10 +21,12 @@ public class Character : MonoBehaviour
     private SignalBus _signalBus;
 
     [Inject]
-    public void Constructor(SignalBus signalBus, NetworkingManager networkingManager)
+    public void Constructor(SignalBus signalBus, NetworkingManager networkingManager, PlayerInput playerInput, PhysicsBody physicsBody)
     {
         _networkingManager = networkingManager;
         _signalBus = signalBus;
+        _playerInput = playerInput;
+        _physicsBody = physicsBody;
     }
 
     private void OnCharacterPacket(PacketSignal<CharacterPacket> packet)
@@ -41,7 +42,6 @@ public class Character : MonoBehaviour
         _signalBus.Subscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
         _playerInput = GetComponent<PlayerInput>();
         _physicsBody = GetComponentInChildren<PhysicsBody>();
-        _renderer = GetComponentInChildren<Renderer>();
         _owner = GetComponentInParent<Player>().Owner;
     }
 

@@ -25,7 +25,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        var character = GetComponentInChildren<Character>();
         if (Owner == SteamHelpers.Me)
         {
             ToggleMenuAction.Enable();

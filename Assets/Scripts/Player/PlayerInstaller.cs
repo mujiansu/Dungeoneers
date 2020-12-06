@@ -6,10 +6,6 @@ public class PlayerInstaller : MonoInstaller<PlayerInstaller>
 {
     private CSteamID _owner;
 
-    public GameObject Renderer;
-
-    public GameObject PhysicsBody;
-
     [Inject]
     public void Constructor(CSteamID owner)
     {
@@ -19,8 +15,10 @@ public class PlayerInstaller : MonoInstaller<PlayerInstaller>
     public override void InstallBindings()
     {
         Container.Bind<CSteamID>().FromInstance(_owner).AsSingle();
-        Container.Bind<Player>().FromComponentOnRoot().AsSingle();
-        Container.Bind<Renderer>().FromComponentOn(Renderer).AsSingle();
-        Container.Bind<PhysicsBody>().FromComponentOn(PhysicsBody).AsSingle();
+        Container.Bind<Player>().FromComponentInHierarchy().AsSingle();
+        Container.Bind<Renderer>().FromComponentInHierarchy().AsSingle();
+        Container.Bind<PhysicsBody>().FromComponentInHierarchy().AsSingle();
+        Container.Bind<Character>().FromComponentInHierarchy().AsSingle();
+        Container.Bind<PlayerInput>().FromComponentInHierarchy().AsSingle();
     }
 }

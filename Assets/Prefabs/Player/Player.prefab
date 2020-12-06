@@ -115,7 +115,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54bc13d2a549751468369575bb09f831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PhysicsBody: {fileID: 1795533917406786064}
 --- !u!1 &1795533917406786070
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,3 +390,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Renderer: {fileID: 1795533917346333920}
   PhysicsBody: {fileID: 1795533917406786070}
+  Character: {fileID: 1795533918179920267}
