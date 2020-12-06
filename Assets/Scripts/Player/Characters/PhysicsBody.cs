@@ -9,7 +9,7 @@ public class PhysicsBody : MonoBehaviour
     void Awake()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
-        _rigidBody.velocity = new Vector2(0.0f, 0.0f);
+        _rigidBody.velocity = Vector2.zero;
     }
 
     public void SetVelocity(Vector2 vel)
