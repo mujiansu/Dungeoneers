@@ -73,7 +73,6 @@ namespace Dungeoneer.Ui
             var startingAlpha = color.a;
             while (alpha < 1)
             {
-                Debug.Log(alpha);
                 _fadeDeltaTime += Time.deltaTime * 1000f;
                 alpha = Mathf.Lerp(startingAlpha, 1, _fadeDeltaTime / SceneTransitionTime);
                 color.a = alpha;
