@@ -77,12 +77,11 @@ namespace Dungeoneer.Managers
         public void Tick()
         {
 
-            while (RetrievePacket<CharacterPacket>())
-            {
-            }
+            while (RetrievePacket<CharacterPacket>()) { }
+            while (RetrievePacket<SceneChangePacket>()) { }
         }
 
-        public bool RetrievePacket<T>()
+        private bool RetrievePacket<T>()
         {
             var result = SteamHelpers.GetPacket(out T packet, out var memberId, _packetDictionary[typeof(T)]);
             if (result)

@@ -65,7 +65,7 @@ namespace Dungeoneer.Managers
             {
                 if (_lobbyManager.Lobby.IsOwnerMe)
                 {
-                    _networkingManager.SendPacketToAllPlayers(new SceneChangePacket { Scene = scene });
+                    _networkingManager.SendPacketToAllPlayers(new SceneChangePacket { Scene = scene }, EP2PSend.k_EP2PSendReliable);
                 }
                 _changingScene = true;
                 _signalBus.Fire<SceneTransitionSignal>();
