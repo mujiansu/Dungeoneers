@@ -4,7 +4,7 @@ using MessagePack;
 using UnityEngine;
 using static Dungeoneer.Managers.SceneChangingManager;
 
-namespace Dugeoneer.Netowrking.Packets
+namespace Dungeoneer.Netowrking.Packets
 {
 
     [MessagePackObject]

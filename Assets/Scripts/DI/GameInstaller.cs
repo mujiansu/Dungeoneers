@@ -1,5 +1,5 @@
-﻿using Dugeoneer.Netowrking.Packets;
-using Dugeoneer.Steamworks;
+﻿using Dungeoneer.Netowrking.Packets;
+using Dungeoneer.Steamworks;
 using Dungeoneer.Managers;
 using Zenject;
 

@@ -1,4 +1,4 @@
-﻿using Dugeoneer.Players;
+﻿using Dungeoneer.Players;
 using Dungeoneer.Managers;
 using Dungeoneer.Ui;
 using Steamworks;

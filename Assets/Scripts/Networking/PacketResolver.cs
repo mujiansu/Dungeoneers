@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Dugeoneer.Netowrking.Packets;
+using Dungeoneer.Netowrking.Packets;
 using MessagePack;
 using MessagePack.Formatters;
 using UnityEngine;

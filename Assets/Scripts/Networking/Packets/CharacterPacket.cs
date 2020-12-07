@@ -1,7 +1,7 @@
 ﻿using MessagePack;
 using UnityEngine;
 
-namespace Dugeoneer.Netowrking.Packets
+namespace Dungeoneer.Netowrking.Packets
 {
     [MessagePackObject]
     public struct CharacterPacket

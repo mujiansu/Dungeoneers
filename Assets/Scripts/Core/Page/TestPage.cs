@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Dugeoneer.Players.Characters;
+using Dungeoneer.Players.Characters;
 using UnityEngine;
 
 public class TestPage : MonoBehaviour

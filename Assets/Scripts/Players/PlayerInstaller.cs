@@ -1,9 +1,9 @@
-using Dugeoneer.Players.Characters;
+using Dungeoneer.Players.Characters;
 using Dungeoneer.Players.Characters;
 using Steamworks;
 using Zenject;
 
-namespace Dugeoneer.Players
+namespace Dungeoneer.Players
 {
     public class PlayerInstaller : MonoInstaller<PlayerInstaller>
     {

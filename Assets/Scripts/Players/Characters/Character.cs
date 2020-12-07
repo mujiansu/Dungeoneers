@@ -1,6 +1,6 @@
-using Dugeoneer.Netowrking.Packets;
-using Dugeoneer.Players;
-using Dugeoneer.Players.Characters;
+using Dungeoneer.Netowrking.Packets;
+using Dungeoneer.Players;
+using Dungeoneer.Players.Characters;
 using Dungeoneer.Managers;
 using Dungeoneer.Steamworks;
 using Steamworks;

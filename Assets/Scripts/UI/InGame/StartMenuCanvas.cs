@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using Zenject;
 using static Dungeoneer.Managers.SceneChangingManager;
 
-namespace Dugeoneer.Ui.InGame
+namespace Dungeoneer.Ui.InGame
 {
     public class StartMenuCanvas : MonoBehaviour
     {

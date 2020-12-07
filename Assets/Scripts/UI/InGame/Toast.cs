@@ -4,7 +4,7 @@ using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-namespace Dugeoneer.Ui.InGame
+namespace Dungeoneer.Ui.InGame
 {
     public class Toast : MonoBehaviour
     {

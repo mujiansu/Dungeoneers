@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
-namespace Dugeoneer.Ui.InGame
+namespace Dungeoneer.Ui.InGame
 {
     public class CanvasController : MonoBehaviour
     {

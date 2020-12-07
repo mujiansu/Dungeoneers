@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Dugeoneer.Players;
+using Dungeoneer.Players;
 using Steamworks;
 using UnityEngine;
 using Zenject;

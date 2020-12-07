@@ -1,5 +1,5 @@
 ﻿using Zenject;
-namespace Dugeoneer.Ui.InGame
+namespace Dungeoneer.Ui.InGame
 {
     public class InGameUiInstaller : MonoInstaller
     {

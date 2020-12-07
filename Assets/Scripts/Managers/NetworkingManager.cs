@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Dugeoneer.Netowrking.Packets;
+using Dungeoneer.Netowrking.Packets;
 using Dungeoneer.Steamworks;
 using Steamworks;
 using UnityEngine;
