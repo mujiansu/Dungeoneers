@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-namespace Dun
 namespace Dungeoneer.Players.Characters
 {
     public class PhysicsBody : MonoBehaviour
