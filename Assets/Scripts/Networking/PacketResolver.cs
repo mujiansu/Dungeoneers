@@ -5,6 +5,7 @@ using Dugeoneer.Netowrking.Packets;
 using MessagePack;
 using MessagePack.Formatters;
 using UnityEngine;
+using static Dungeoneer.Managers.SceneChangingManager;
 
 namespace Dungeoneer.Netowrking
 {
@@ -31,7 +32,8 @@ namespace Dungeoneer.Netowrking
     {
         private static readonly Dictionary<Type, object> FormatterMap = new Dictionary<Type, object>()
     {
-        {typeof(CharacterPacket), new CharacterPacketFormatter()}
+        {typeof(CharacterPacket), new CharacterPacketFormatter()},
+        {typeof(SceneChangePacket), new SceneChangePacketFormatter()}
     };
 
         internal static object GetFormatter(Type t)
@@ -46,6 +48,8 @@ namespace Dungeoneer.Netowrking
         }
 
     }
+
+
 
     public sealed class CharacterPacketFormatter : IMessagePackFormatter<CharacterPacket>
     {
@@ -86,6 +90,48 @@ namespace Dungeoneer.Netowrking
             IFormatterResolver resolver = options.Resolver;
             writer.WriteArrayHeader(1);
             resolver.GetFormatterWithVerify<Vector2>().Serialize(ref writer, value.Pos, options);
+        }
+    }
+
+    public sealed class SceneChangePacketFormatter : IMessagePackFormatter<SceneChangePacket>
+    {
+        public SceneChangePacket Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+        {
+            if (reader.IsNil)
+            {
+                throw new InvalidOperationException("typecode is null, struct not supported");
+            }
+
+            IFormatterResolver resolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+
+            var x = default(Scene);
+            for (int i = 0; i < length; i++)
+            {
+                var key = i;
+                switch (key)
+                {
+                    case 0:
+                        x = resolver.GetFormatterWithVerify<Scene>().Deserialize(ref reader, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            var result = new SceneChangePacket
+            {
+                Scene = x
+            };
+            return result;
+        }
+
+        public void Serialize(ref MessagePackWriter writer, SceneChangePacket value, MessagePackSerializerOptions options)
+        {
+            IFormatterResolver resolver = options.Resolver;
+            writer.WriteArrayHeader(1);
+            resolver.GetFormatterWithVerify<Scene>().Serialize(ref writer, value.Scene, options);
         }
     }
 }

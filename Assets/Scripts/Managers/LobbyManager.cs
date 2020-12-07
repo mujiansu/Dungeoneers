@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dungeoneer.Steamworks;
 using Steamworks;
@@ -66,6 +67,28 @@ namespace Dungeoneer.Managers
             {
                 SteamMatchmaking.InviteUserToLobby(Lobby.Id, userId);
             }
+        }
+
+        public void SetLoading()
+        {
+            if (Lobby.IsInLobby)
+            {
+                SteamMatchmaking.SetLobbyMemberData(Lobby.Id, "loading", "true");
+            }
+        }
+
+        public void CompleteLoading()
+        {
+            if (Lobby.IsInLobby)
+            {
+                SteamMatchmaking.SetLobbyMemberData(Lobby.Id, "loading", "false");
+            }
+        }
+
+        public bool AnyMembersLoading()
+        {
+            if (!Lobby.IsInLobby) return false;
+            return Lobby.Members.Any(x => SteamMatchmaking.GetLobbyMemberData(Lobby.Id, (CSteamID)x.m_SteamID, "loading") == "true");
         }
 
         public void JoinLobby(CSteamID lobbyId)
@@ -182,6 +205,10 @@ namespace Dungeoneer.Managers
                 }
             }
             Members = result;
+            if (IsInLobby)
+            {
+                Owner = SteamMatchmaking.GetLobbyOwner(Id);
+            }
             _signalBus.Fire<LobbyManager.MembersUpdateSignal>();
         }
     }

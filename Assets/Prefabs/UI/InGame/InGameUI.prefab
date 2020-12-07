@@ -1533,6 +1533,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InviteBtn: {fileID: 1974752336080441421}
+  RestartLevelBtn: {fileID: 1974752336200080216}
+  ReturnToHubBtn: {fileID: 1974752334426468427}
 --- !u!1 &1974752335453156953
 GameObject:
   m_ObjectHideFlags: 0
