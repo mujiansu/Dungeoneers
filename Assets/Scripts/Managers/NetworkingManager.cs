@@ -30,6 +30,7 @@ namespace Dungeoneer.Managers
             SteamHelpers.RegisterCallback<P2PSessionConnectFail_t>(OnP2PSessionFailed);
             _lobbyManager = lobbyManager;
             _packetDictionary.Add(typeof(CharacterPacket), PacketChannel.Test);
+            _packetDictionary.Add(typeof(SceneChangePacket), PacketChannel.SceneChange)
         }
 
 
@@ -99,6 +100,7 @@ namespace Dungeoneer.Managers
 
     public enum PacketChannel
     {
+        SceneChange,
         Test
     }
 
