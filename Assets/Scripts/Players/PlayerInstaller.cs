@@ -1,5 +1,4 @@
 using Dungeoneer.Players.Characters;
-using Dungeoneer.Players.Characters;
 using Steamworks;
 using Zenject;
 
