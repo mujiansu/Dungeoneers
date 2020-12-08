@@ -59,9 +59,8 @@ namespace Dungeoneer.Steamworks
             return result;
         }
 
-        public static bool SendPacket<T>(CSteamID memberId, T data, PacketChannel packetChannel, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
+        public static bool SendPacket(CSteamID memberId, byte[] packet, PacketChannel packetChannel, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
         {
-            var packet = MessagePackSerializer.Serialize(data);
             return SteamNetworking.SendP2PPacket(memberId, packet, (uint)packet.Length, protocol, (int)packetChannel);
         }
 

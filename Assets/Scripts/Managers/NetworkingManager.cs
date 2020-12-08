@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Dungeoneer.Netowrking.Packets;
 using Dungeoneer.Steamworks;
+using MessagePack;
 using Steamworks;
 using UnityEngine;
 using Zenject;
@@ -67,7 +68,8 @@ namespace Dungeoneer.Managers
 
         public void SendPacketToPlayer<T>(CSteamID member, T data, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
         {
-            if (member != SteamHelpers.Me) SteamHelpers.SendPacket(member, data, _packetDictionary[typeof(T)], protocol);
+            var packet = MessagePackSerializer.Serialize(data);
+            if (member != SteamHelpers.Me) SteamHelpers.SendPacket(member, packet, _packetDictionary[typeof(T)], protocol);
         }
 
         public void SendPacketToHost<T>(T data, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
