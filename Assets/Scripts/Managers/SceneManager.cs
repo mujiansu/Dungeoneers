@@ -41,6 +41,12 @@ namespace Dungeoneer.Managers
             _signalBus = signalBus;
             _lobbyManager = lobbyManager;
             _networkingManager = networkingManager;
+            _signalBus.Subscribe<LobbyManager.LobbyJoinedSignal>(OnLobbyJoinedSignal);
+        }
+
+        private void OnLobbyJoinedSignal()
+        {
+            ChangeScene(_lobbyManager.Lobby.Scene, true);
         }
 
         public class SceneTransitionSignal { }
@@ -66,6 +72,7 @@ namespace Dungeoneer.Managers
                 if (_lobbyManager.Lobby.IsOwnerMe)
                 {
                     _networkingManager.SendPacketToAllPlayers(new SceneChangePacket { Scene = scene }, EP2PSend.k_EP2PSendReliable);
+                    _lobbyManager.Lobby.Scene = scene;
                 }
                 _changingScene = true;
                 _signalBus.Fire<SceneTransitionSignal>();

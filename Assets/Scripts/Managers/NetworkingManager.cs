@@ -16,6 +16,7 @@ namespace Dungeoneer.Managers
 
         private Dictionary<Type, PacketChannel> _packetDictionary = new Dictionary<Type, PacketChannel>();
 
+
         public class PacketSignal<T>
         {
             public CSteamID Sender { get; set; }

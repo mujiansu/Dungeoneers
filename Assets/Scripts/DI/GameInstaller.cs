@@ -12,6 +12,7 @@ namespace Dungeoneer.DI
             SignalBusInstaller.Install(Container);
             Container.DeclareSignal<LobbyManager.MembersUpdateSignal>().OptionalSubscriber();
             Container.DeclareSignal<LobbyManager.LobbyInviteReceivedSignal>().OptionalSubscriber();
+            Container.DeclareSignal<LobbyManager.LobbyJoinedSignal>().OptionalSubscriber();
             Container.DeclareSignal<SceneChangingManager.SceneTransitionSignal>().OptionalSubscriber().RunAsync();
             DeclarePacketSignals();
             Container.BindInterfacesAndSelfTo<SteamManager>().AsSingle().NonLazy();

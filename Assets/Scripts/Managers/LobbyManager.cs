@@ -6,6 +6,7 @@ using Dungeoneer.Steamworks;
 using Steamworks;
 using UnityEngine;
 using Zenject;
+using static Dungeoneer.Managers.SceneChangingManager;
 
 namespace Dungeoneer.Managers
 {
@@ -24,6 +25,8 @@ namespace Dungeoneer.Managers
         {
             public LobbyInvite LobbyInvite { get; set; }
         }
+
+        public class LobbyJoinedSignal { }
 
         [Inject]
         public void Constructor(SignalBus signalBus)
@@ -117,8 +120,8 @@ namespace Dungeoneer.Managers
                     Debug.Log($"{SteamFriends.GetFriendPersonaName((CSteamID)param.m_ulSteamIDUserChanged)} has left the game.");
                     if (param.m_ulSteamIDUserChanged != SteamHelpers.Me.m_SteamID)
                     {
+                        SteamNetworking.CloseP2PSessionWithUser((CSteamID)param.m_ulSteamIDUserChanged);
                         Lobby.SyncMemebers();
-                        //Closep2pSession
                     }
                     break;
                 case EChatMemberStateChange.k_EChatMemberStateChangeEntered:
@@ -133,6 +136,7 @@ namespace Dungeoneer.Managers
             if (param.m_EChatRoomEnterResponse == (uint)EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess)
             {
                 Lobby.EnterLobby((CSteamID)param.m_ulSteamIDLobby);
+                _signalBus.Fire<LobbyJoinedSignal>();
             }
         }
 
@@ -158,6 +162,21 @@ namespace Dungeoneer.Managers
         public bool IsOwnerMe { get; set; }
         public List<CSteamID> Members { get; set; }
         public CSteamID Owner { get; set; }
+
+        public Scene Scene
+        {
+            get => (Scene)Enum.Parse(typeof(Scene), SteamMatchmaking.GetLobbyData(Id, "scene"));
+            set
+            {
+                Joinable = value == Scene.Hub;
+                SteamMatchmaking.SetLobbyData(Id, "scene", value.ToString());
+            }
+        }
+
+        public bool Joinable
+        {
+            set => SteamMatchmaking.SetLobbyJoinable(Id, value);
+        }
 
         private SignalBus _signalBus;
 
