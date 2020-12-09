@@ -1,6 +1,4 @@
 using Dungeoneer.Netowrking.Packets;
-using Dungeoneer.Players;
-using Dungeoneer.Players.Characters;
 using Dungeoneer.Managers;
 using Dungeoneer.Steamworks;
 using Steamworks;
@@ -16,12 +14,11 @@ namespace Dungeoneer.Players.Characters
         public float Speed = 1f;
         private PhysicsBody _physicsBody;
         private PlayerCamera _playerCamera;
-        private PlayerInput _playerInput;
 
         private Vector2 _moveLoc;
         private Vector2 _mouseLoc;
         private bool _playerIsMoving;
-
+        private PlayerActionControls.PlayerActions _playerActions;
         private CSteamID _owner;
         private bool _isOwner;
 
@@ -30,13 +27,13 @@ namespace Dungeoneer.Players.Characters
         private SignalBus _signalBus;
 
         [Inject]
-        public void Constructor(CSteamID owner, SignalBus signalBus, NetworkingManager networkingManager, PlayerInput playerInput, PhysicsBody physicsBody)
+        public void Constructor(CSteamID owner, SignalBus signalBus, NetworkingManager networkingManager, PhysicsBody physicsBody, PlayerActionControls controls)
         {
+            _playerActions = controls.Player;
             _owner = owner;
             _isOwner = _owner == SteamHelpers.Me;
             _networkingManager = networkingManager;
             _signalBus = signalBus;
-            _playerInput = playerInput;
             _physicsBody = physicsBody;
         }
 
@@ -50,8 +47,8 @@ namespace Dungeoneer.Players.Characters
 
         void Start()
         {
+            if (_isOwner) _playerActions.Enable();
             _signalBus.Subscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
-            _playerInput = GetComponent<PlayerInput>();
             _physicsBody = GetComponentInChildren<PhysicsBody>();
             _moveLoc = _physicsBody.Pos;
         }
@@ -61,9 +58,9 @@ namespace Dungeoneer.Players.Characters
         {
             if (_isOwner)
             {
-                if (_playerInput.MovePlayer.ReadValue<float>() > 0)
+                if (_playerActions.Move.ReadValue<float>() > 0)
                 {
-                    _moveLoc = UnityEngine.Camera.main.ScreenToWorldPoint(_playerInput.MousePosition.ReadValue<Vector2>());
+                    _moveLoc = UnityEngine.Camera.main.ScreenToWorldPoint(_playerActions.MousePosition.ReadValue<Vector2>());
                 }
             }
 
