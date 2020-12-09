@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Dugeoneer.Players.Characters
+namespace Dungeoneer.Players.Characters
 {
     public class PlayerInput : MonoBehaviour
     {

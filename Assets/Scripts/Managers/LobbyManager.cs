@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dungeoneer.Steamworks;
 using Steamworks;
 using UnityEngine;
 using Zenject;
+using static Dungeoneer.Managers.SceneChangingManager;
 
 namespace Dungeoneer.Managers
 {
@@ -23,6 +25,8 @@ namespace Dungeoneer.Managers
         {
             public LobbyInvite LobbyInvite { get; set; }
         }
+
+        public class LobbyJoinedSignal { }
 
         [Inject]
         public void Constructor(SignalBus signalBus)
@@ -68,6 +72,28 @@ namespace Dungeoneer.Managers
             }
         }
 
+        public void SetLoading()
+        {
+            if (Lobby.IsInLobby)
+            {
+                SteamMatchmaking.SetLobbyMemberData(Lobby.Id, "loading", "true");
+            }
+        }
+
+        public void CompleteLoading()
+        {
+            if (Lobby.IsInLobby)
+            {
+                SteamMatchmaking.SetLobbyMemberData(Lobby.Id, "loading", "false");
+            }
+        }
+
+        public bool AnyMembersLoading()
+        {
+            if (!Lobby.IsInLobby) return false;
+            return Lobby.Members.Any(x => SteamMatchmaking.GetLobbyMemberData(Lobby.Id, (CSteamID)x.m_SteamID, "loading") == "true");
+        }
+
         public void JoinLobby(CSteamID lobbyId)
         {
             SteamMatchmaking.JoinLobby(lobbyId);
@@ -94,8 +120,8 @@ namespace Dungeoneer.Managers
                     Debug.Log($"{SteamFriends.GetFriendPersonaName((CSteamID)param.m_ulSteamIDUserChanged)} has left the game.");
                     if (param.m_ulSteamIDUserChanged != SteamHelpers.Me.m_SteamID)
                     {
+                        SteamNetworking.CloseP2PSessionWithUser((CSteamID)param.m_ulSteamIDUserChanged);
                         Lobby.SyncMemebers();
-                        //Closep2pSession
                     }
                     break;
                 case EChatMemberStateChange.k_EChatMemberStateChangeEntered:
@@ -110,6 +136,7 @@ namespace Dungeoneer.Managers
             if (param.m_EChatRoomEnterResponse == (uint)EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess)
             {
                 Lobby.EnterLobby((CSteamID)param.m_ulSteamIDLobby);
+                _signalBus.Fire<LobbyJoinedSignal>();
             }
         }
 
@@ -135,6 +162,26 @@ namespace Dungeoneer.Managers
         public bool IsOwnerMe { get; set; }
         public List<CSteamID> Members { get; set; }
         public CSteamID Owner { get; set; }
+
+        private Scene _scene;
+
+        public Scene Scene
+        {
+            get
+            {
+                if (IsInLobby)
+                {
+                    _scene = (Scene)Enum.Parse(typeof(Scene), SteamMatchmaking.GetLobbyData(Id, "scene"));
+                }
+                return _scene;
+            }
+            set
+            {
+                SteamMatchmaking.SetLobbyJoinable(Id, value == Scene.Hub);
+                SteamMatchmaking.SetLobbyData(Id, "scene", value.ToString());
+                _scene = value;
+            }
+        }
 
         private SignalBus _signalBus;
 
@@ -163,6 +210,7 @@ namespace Dungeoneer.Managers
             IsInLobby = true;
             Owner = SteamMatchmaking.GetLobbyOwner(lobbyId);
             IsOwnerMe = Owner == SteamHelpers.Me;
+            if (IsOwnerMe) Scene = _scene;
             SyncMemebers();
         }
 
@@ -182,6 +230,10 @@ namespace Dungeoneer.Managers
                 }
             }
             Members = result;
+            if (IsInLobby)
+            {
+                Owner = SteamMatchmaking.GetLobbyOwner(Id);
+            }
             _signalBus.Fire<LobbyManager.MembersUpdateSignal>();
         }
     }

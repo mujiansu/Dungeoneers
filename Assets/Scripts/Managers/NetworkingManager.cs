@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Dugeoneer.Netowrking.Packets;
+using Dungeoneer.Netowrking.Packets;
 using Dungeoneer.Steamworks;
+using MessagePack;
 using Steamworks;
 using UnityEngine;
 using Zenject;
@@ -15,6 +16,7 @@ namespace Dungeoneer.Managers
         private SignalBus _signalBus;
 
         private Dictionary<Type, PacketChannel> _packetDictionary = new Dictionary<Type, PacketChannel>();
+
 
         public class PacketSignal<T>
         {
@@ -30,6 +32,7 @@ namespace Dungeoneer.Managers
             SteamHelpers.RegisterCallback<P2PSessionConnectFail_t>(OnP2PSessionFailed);
             _lobbyManager = lobbyManager;
             _packetDictionary.Add(typeof(CharacterPacket), PacketChannel.Test);
+            _packetDictionary.Add(typeof(SceneChangePacket), PacketChannel.SceneChange);
         }
 
 
@@ -65,7 +68,8 @@ namespace Dungeoneer.Managers
 
         public void SendPacketToPlayer<T>(CSteamID member, T data, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
         {
-            if (member != SteamHelpers.Me) SteamHelpers.SendPacket(member, data, _packetDictionary[typeof(T)], protocol);
+            var packet = MessagePackSerializer.Serialize(data);
+            if (member != SteamHelpers.Me) SteamHelpers.SendPacket(member, packet, _packetDictionary[typeof(T)], protocol);
         }
 
         public void SendPacketToHost<T>(T data, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
@@ -76,12 +80,11 @@ namespace Dungeoneer.Managers
         public void Tick()
         {
 
-            while (RetrievePacket<CharacterPacket>())
-            {
-            }
+            while (RetrievePacket<CharacterPacket>()) { }
+            while (RetrievePacket<SceneChangePacket>()) { }
         }
 
-        public bool RetrievePacket<T>()
+        private bool RetrievePacket<T>()
         {
             var result = SteamHelpers.GetPacket(out T packet, out var memberId, _packetDictionary[typeof(T)]);
             if (result)
@@ -99,6 +102,7 @@ namespace Dungeoneer.Managers
 
     public enum PacketChannel
     {
+        SceneChange,
         Test
     }
 

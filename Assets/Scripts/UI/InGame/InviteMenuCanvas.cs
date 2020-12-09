@@ -4,9 +4,9 @@ using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using static Dugeoneer.Ui.InGame.CanvasController;
+using static Dungeoneer.Ui.InGame.CanvasController;
 
-namespace Dugeoneer.Ui.InGame
+namespace Dungeoneer.Ui.InGame
 {
     public class InviteMenuCanvas : MonoBehaviour
     {

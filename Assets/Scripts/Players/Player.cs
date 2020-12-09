@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
-namespace Dugeoneer.Players
+namespace Dungeoneer.Players
 {
     public class Player : MonoBehaviour
     {

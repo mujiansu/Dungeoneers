@@ -1,6 +1,6 @@
-using Dugeoneer.Netowrking.Packets;
-using Dugeoneer.Players;
-using Dugeoneer.Players.Characters;
+using Dungeoneer.Netowrking.Packets;
+using Dungeoneer.Players;
+using Dungeoneer.Players.Characters;
 using Dungeoneer.Managers;
 using Dungeoneer.Steamworks;
 using Steamworks;
@@ -23,14 +23,17 @@ namespace Dungeoneer.Players.Characters
         private bool _playerIsMoving;
 
         private CSteamID _owner;
+        private bool _isOwner;
 
         private NetworkingManager _networkingManager;
 
         private SignalBus _signalBus;
 
         [Inject]
-        public void Constructor(SignalBus signalBus, NetworkingManager networkingManager, PlayerInput playerInput, PhysicsBody physicsBody)
+        public void Constructor(CSteamID owner, SignalBus signalBus, NetworkingManager networkingManager, PlayerInput playerInput, PhysicsBody physicsBody)
         {
+            _owner = owner;
+            _isOwner = _owner == SteamHelpers.Me;
             _networkingManager = networkingManager;
             _signalBus = signalBus;
             _playerInput = playerInput;
@@ -41,7 +44,7 @@ namespace Dungeoneer.Players.Characters
         {
             if (_owner == packet.Sender)
             {
-                _physicsBody.SetPosition(packet.Data.Pos);
+                _physicsBody.Pos = packet.Data.Pos;
             }
         }
 
@@ -50,13 +53,13 @@ namespace Dungeoneer.Players.Characters
             _signalBus.Subscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
             _playerInput = GetComponent<PlayerInput>();
             _physicsBody = GetComponentInChildren<PhysicsBody>();
-            _owner = GetComponentInParent<Player>().Owner;
+            _moveLoc = _physicsBody.Pos;
         }
 
 
         void Update()
         {
-            if (_owner == SteamHelpers.Me)
+            if (_isOwner)
             {
                 if (_playerInput.MovePlayer.ReadValue<float>() > 0)
                 {
@@ -68,17 +71,17 @@ namespace Dungeoneer.Players.Characters
 
         private void FixedUpdate()
         {
-            if (_owner == SteamHelpers.Me)
+            if (_isOwner)
             {
-                Vector2 diff = _moveLoc - (Vector2)_physicsBody.transform.position;
+                Vector2 diff = _moveLoc - (Vector2)_physicsBody.Pos;
                 var vel = diff.normalized * Speed;
                 if (diff.magnitude > vel.magnitude * Time.fixedDeltaTime)
                 {
-                    _physicsBody.SetVelocity(vel);
+                    _physicsBody.Velocity = vel;
                 }
                 else
                 {
-                    _physicsBody.SetVelocity(Vector2.zero);
+                    _physicsBody.Velocity = Vector2.zero;
                 }
                 var packet = new CharacterPacket
                 {
@@ -97,7 +100,6 @@ namespace Dungeoneer.Players.Characters
         private void OnDestroy()
         {
             _signalBus.Unsubscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
-
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Dungeoneer.Managers;
 using UnityEngine;
 using Zenject;
-namespace Dugeoneer.Ui.InGame
+namespace Dungeoneer.Ui.InGame
 {
     public class ToastController : MonoBehaviour
     {

@@ -1,9 +1,9 @@
-using Dugeoneer.Players.Characters;
 using Dungeoneer.Players.Characters;
+using Dungeoneer.Steamworks;
 using Steamworks;
 using Zenject;
 
-namespace Dugeoneer.Players
+namespace Dungeoneer.Players
 {
     public class PlayerInstaller : MonoInstaller<PlayerInstaller>
     {
@@ -18,6 +18,7 @@ namespace Dugeoneer.Players
         public override void InstallBindings()
         {
             Container.Bind<CSteamID>().FromInstance(_owner).AsSingle();
+            Container.Bind<bool>().FromInstance(_owner == SteamHelpers.Me).AsSingle();
             Container.Bind<Player>().FromComponentInHierarchy().AsSingle();
             Container.Bind<Renderer>().FromComponentInHierarchy().AsSingle();
             Container.Bind<PhysicsBody>().FromComponentInHierarchy().AsSingle();

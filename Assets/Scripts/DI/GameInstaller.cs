@@ -1,7 +1,8 @@
-﻿using Dugeoneer.Netowrking.Packets;
-using Dugeoneer.Steamworks;
+﻿using Dungeoneer.Netowrking.Packets;
+using Dungeoneer.Steamworks;
 using Dungeoneer.Managers;
 using Zenject;
+
 namespace Dungeoneer.DI
 {
     public class GameInstaller : MonoInstaller
@@ -10,9 +11,12 @@ namespace Dungeoneer.DI
         {
             SignalBusInstaller.Install(Container);
             Container.DeclareSignal<LobbyManager.MembersUpdateSignal>().OptionalSubscriber();
-            Container.DeclareSignal<LobbyManager.LobbyInviteReceivedSignal>();
+            Container.DeclareSignal<LobbyManager.LobbyInviteReceivedSignal>().OptionalSubscriber();
+            Container.DeclareSignal<LobbyManager.LobbyJoinedSignal>().OptionalSubscriber();
+            Container.DeclareSignal<SceneChangingManager.SceneTransitionSignal>().OptionalSubscriber().RunAsync();
             DeclarePacketSignals();
             Container.BindInterfacesAndSelfTo<SteamManager>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<SceneChangingManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<LobbyManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<NetworkingManager>().AsSingle();
         }
@@ -20,6 +24,7 @@ namespace Dungeoneer.DI
         private void DeclarePacketSignals()
         {
             Container.DeclareSignal<NetworkingManager.PacketSignal<CharacterPacket>>();
+            Container.DeclareSignal<NetworkingManager.PacketSignal<SceneChangePacket>>();
         }
     }
 

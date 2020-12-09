@@ -14,7 +14,7 @@ using Zenject;
 using System;
 using Dungeoneer.Steamworks;
 
-namespace Dugeoneer.Steamworks
+namespace Dungeoneer.Steamworks
 {
     //
     // The SteamManager provides a base implementation of Steamworks.NET on which you can build upon.

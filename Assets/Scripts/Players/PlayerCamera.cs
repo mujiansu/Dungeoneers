@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace Dugeoneer.Players
+namespace Dungeoneer.Players
 {
     public class PlayerCamera : MonoBehaviour
     {

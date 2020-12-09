@@ -1,4 +1,4 @@
-﻿using Dugeoneer.Players;
+﻿using Dungeoneer.Players;
 using Dungeoneer.Steamworks;
 using Steamworks;
 using UnityEngine;
@@ -15,12 +15,12 @@ namespace Dungeoneer.Players.Characters
         private float _deltaTime;
         private bool _posChanged = false;
         private PlayerCamera _camera;
-        private CSteamID _owner;
+        private bool _isOwner;
 
         [Inject]
-        public void Constructor(CSteamID owner, PlayerCamera camera, PhysicsBody physicsBody)
+        public void Constructor(bool isOwner, PlayerCamera camera, PhysicsBody physicsBody)
         {
-            _owner = owner;
+            _isOwner = isOwner;
             _camera = camera;
             _physicsBody = physicsBody;
         }
@@ -48,7 +48,7 @@ namespace Dungeoneer.Players.Characters
             _deltaTime += Time.deltaTime;
             var elapsedTime = _deltaTime / Time.fixedDeltaTime;
             transform.position = Vector2.Lerp(_prevPos, _newPos, elapsedTime);
-            if (_owner == SteamHelpers.Me)
+            if (_isOwner)
             {
                 _camera.SetPos(transform.position);
             }

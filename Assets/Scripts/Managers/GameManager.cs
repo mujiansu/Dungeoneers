@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Dugeoneer.Players;
+using Dungeoneer.Players;
 using Steamworks;
 using UnityEngine;
 using Zenject;
+using static Dungeoneer.Managers.SceneChangingManager;
 
 namespace Dungeoneer.Managers
 {
@@ -20,17 +21,19 @@ namespace Dungeoneer.Managers
         private SignalBus _signalBus;
         private LobbyManager _lobbyManager;
         private Player.Factory _playerFactory;
+        private SceneChangingManager _sceneManager;
 
         private Dictionary<CSteamID, Player> _players = new Dictionary<CSteamID, Player>();
 
         private bool IsMenuOpen = false;
 
         [Inject]
-        public void Constructor(SignalBus signalBus, LobbyManager lobbyManager, Player.Factory playerFactory)
+        public void Constructor(SignalBus signalBus, LobbyManager lobbyManager, Player.Factory playerFactory, SceneChangingManager sceneManger)
         {
             _signalBus = signalBus;
             _lobbyManager = lobbyManager;
             _playerFactory = playerFactory;
+            _sceneManager = sceneManger;
         }
 
         public void Initialize()
@@ -38,7 +41,6 @@ namespace Dungeoneer.Managers
             _signalBus.Subscribe<LobbyManager.MembersUpdateSignal>(OnMembersUpdateSignal);
             foreach (var member in _lobbyManager.Lobby.Members)
             {
-
                 var player = _playerFactory.Create(member);
                 player.transform.SetParent(PlayersContainer.transform);
                 _players.Add(member, player);
