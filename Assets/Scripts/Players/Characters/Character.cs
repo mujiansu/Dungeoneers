@@ -5,6 +5,9 @@ using Steamworks;
 using UnityEngine;
 using Zenject;
 using static Dungeoneer.Managers.NetworkingManager;
+using Dungeoneer.Ui.InGame;
+using System;
+using static Dungeoneer.Ui.InGame.CanvasController;
 
 namespace Dungeoneer.Players.Characters
 {
@@ -37,6 +40,12 @@ namespace Dungeoneer.Players.Characters
             _physicsBody = physicsBody;
         }
 
+        private void OnMenuStateChangeSignal(MenuStateChangeSignal signal)
+        {
+            if (signal.IsOpen) _playerActions.Disable();
+            else _playerActions.Enable();
+        }
+
         private void OnCharacterPacket(PacketSignal<CharacterPacket> packet)
         {
             if (_owner == packet.Sender)
@@ -48,6 +57,7 @@ namespace Dungeoneer.Players.Characters
         void Start()
         {
             if (_isOwner) _playerActions.Enable();
+            if (_isOwner) _signalBus.Subscribe<CanvasController.MenuStateChangeSignal>(OnMenuStateChangeSignal);
             _signalBus.Subscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
             _physicsBody = GetComponentInChildren<PhysicsBody>();
             _moveLoc = _physicsBody.Pos;
