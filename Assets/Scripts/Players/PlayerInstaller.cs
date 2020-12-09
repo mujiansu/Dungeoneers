@@ -23,7 +23,6 @@ namespace Dungeoneer.Players
             Container.Bind<Renderer>().FromComponentInHierarchy().AsSingle();
             Container.Bind<PhysicsBody>().FromComponentInHierarchy().AsSingle();
             Container.Bind<Character>().FromComponentInHierarchy().AsSingle();
-            Container.Bind<PlayerInput>().FromComponentInHierarchy().AsSingle();
         }
     }
 }
