@@ -16,11 +16,7 @@ namespace Dungeoneer.Players.Characters
 
         public float Speed = 1f;
         private PhysicsBody _physicsBody;
-        private PlayerCamera _playerCamera;
-
         private Vector2 _moveLoc;
-        private Vector2 _mouseLoc;
-        private bool _playerIsMoving;
         private PlayerActionControls.PlayerActions _playerActions;
         private CSteamID _owner;
         private bool _isOwner;
