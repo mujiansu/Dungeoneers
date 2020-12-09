@@ -128,6 +128,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 142269066426687780, guid: a96b121d04a704648a2f7e871129db00,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7130259255173437056, guid: a96b121d04a704648a2f7e871129db00,
         type: 3}
       propertyPath: m_Name
@@ -192,6 +197,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ShapeTexture
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8760767683867748408, guid: a96b121d04a704648a2f7e871129db00,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a96b121d04a704648a2f7e871129db00, type: 3}
