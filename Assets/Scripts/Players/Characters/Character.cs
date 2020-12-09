@@ -23,14 +23,17 @@ namespace Dungeoneer.Players.Characters
         private bool _playerIsMoving;
 
         private CSteamID _owner;
+        private bool _isOwner;
 
         private NetworkingManager _networkingManager;
 
         private SignalBus _signalBus;
 
         [Inject]
-        public void Constructor(SignalBus signalBus, NetworkingManager networkingManager, PlayerInput playerInput, PhysicsBody physicsBody)
+        public void Constructor(CSteamID owner, SignalBus signalBus, NetworkingManager networkingManager, PlayerInput playerInput, PhysicsBody physicsBody)
         {
+            _owner = owner;
+            _isOwner = _owner == SteamHelpers.Me;
             _networkingManager = networkingManager;
             _signalBus = signalBus;
             _playerInput = playerInput;
@@ -50,13 +53,13 @@ namespace Dungeoneer.Players.Characters
             _signalBus.Subscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
             _playerInput = GetComponent<PlayerInput>();
             _physicsBody = GetComponentInChildren<PhysicsBody>();
-            _owner = GetComponentInParent<Player>().Owner;
+            _moveLoc = _physicsBody.Pos;
         }
 
 
         void Update()
         {
-            if (_owner == SteamHelpers.Me)
+            if (_isOwner)
             {
                 if (_playerInput.MovePlayer.ReadValue<float>() > 0)
                 {
@@ -68,7 +71,7 @@ namespace Dungeoneer.Players.Characters
 
         private void FixedUpdate()
         {
-            if (_owner == SteamHelpers.Me)
+            if (_isOwner)
             {
                 Vector2 diff = _moveLoc - (Vector2)_physicsBody.Pos;
                 var vel = diff.normalized * Speed;

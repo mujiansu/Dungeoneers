@@ -15,12 +15,12 @@ namespace Dungeoneer.Players.Characters
         private float _deltaTime;
         private bool _posChanged = false;
         private PlayerCamera _camera;
-        private CSteamID _owner;
+        private bool _isOwner;
 
         [Inject]
-        public void Constructor(CSteamID owner, PlayerCamera camera, PhysicsBody physicsBody)
+        public void Constructor(bool isOwner, PlayerCamera camera, PhysicsBody physicsBody)
         {
-            _owner = owner;
+            _isOwner = isOwner;
             _camera = camera;
             _physicsBody = physicsBody;
         }
@@ -39,7 +39,7 @@ namespace Dungeoneer.Players.Characters
             if (_posChanged)
             {
                 _prevPos = _newPos;
-                _newPos = _physicsBody.Pos;
+                _newPos = _physicsBody.transform.position;
                 _deltaTime = 0f;
                 _animator.SetFloat("x_vel", _newPos.x - _prevPos.x);
                 _animator.SetFloat("y_vel", _newPos.y - _prevPos.y);
@@ -48,7 +48,7 @@ namespace Dungeoneer.Players.Characters
             _deltaTime += Time.deltaTime;
             var elapsedTime = _deltaTime / Time.fixedDeltaTime;
             transform.position = Vector2.Lerp(_prevPos, _newPos, elapsedTime);
-            if (_owner == SteamHelpers.Me)
+            if (_isOwner)
             {
                 _camera.SetPos(transform.position);
             }

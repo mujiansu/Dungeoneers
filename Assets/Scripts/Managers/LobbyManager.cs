@@ -163,19 +163,24 @@ namespace Dungeoneer.Managers
         public List<CSteamID> Members { get; set; }
         public CSteamID Owner { get; set; }
 
+        private Scene _scene;
+
         public Scene Scene
         {
-            get => (Scene)Enum.Parse(typeof(Scene), SteamMatchmaking.GetLobbyData(Id, "scene"));
+            get
+            {
+                if (IsInLobby)
+                {
+                    _scene = (Scene)Enum.Parse(typeof(Scene), SteamMatchmaking.GetLobbyData(Id, "scene"));
+                }
+                return _scene;
+            }
             set
             {
-                Joinable = value == Scene.Hub;
+                SteamMatchmaking.SetLobbyJoinable(Id, value == Scene.Hub);
                 SteamMatchmaking.SetLobbyData(Id, "scene", value.ToString());
+                _scene = value;
             }
-        }
-
-        public bool Joinable
-        {
-            set => SteamMatchmaking.SetLobbyJoinable(Id, value);
         }
 
         private SignalBus _signalBus;
@@ -205,6 +210,7 @@ namespace Dungeoneer.Managers
             IsInLobby = true;
             Owner = SteamMatchmaking.GetLobbyOwner(lobbyId);
             IsOwnerMe = Owner == SteamHelpers.Me;
+            if (IsOwnerMe) Scene = _scene;
             SyncMemebers();
         }
 
