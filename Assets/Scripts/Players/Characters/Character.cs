@@ -6,8 +6,9 @@ using UnityEngine;
 using Zenject;
 using static Dungeoneer.Managers.NetworkingManager;
 using Dungeoneer.Ui.InGame;
-using System;
 using static Dungeoneer.Ui.InGame.CanvasController;
+using static Dungeoneer.Spells.Dungeoneer.Spells.SpellsController;
+using Dungeoneer.Spells.Dungeoneer.Spells;
 
 namespace Dungeoneer.Players.Characters
 {
@@ -71,8 +72,17 @@ namespace Dungeoneer.Players.Characters
                 {
                     _moveLoc = UnityEngine.Camera.main.ScreenToWorldPoint(_playerActions.MousePosition.ReadValue<Vector2>());
                 }
+                if (_playerActions.CastSpell.triggered)
+                {
+                    _signalBus.Fire<SpellCastSignal>(new SpellCastSignal(
+                        _owner,
+                        SpellElement.Rock,
+                        SpellType.Projectile,
+                        _physicsBody.Pos,
+                        UnityEngine.Camera.main.ScreenToWorldPoint(_playerActions.MousePosition.ReadValue<Vector2>()))
+                    );
+                }
             }
-
         }
 
         private void FixedUpdate()

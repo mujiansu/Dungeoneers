@@ -41,6 +41,14 @@ public class @PlayerActionControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""CastSpell"",
+                    ""type"": ""Button"",
+                    ""id"": ""9e48678e-0c35-4be5-91a3-2a562fe6afc6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -74,6 +82,17 @@ public class @PlayerActionControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Stop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""821e6037-0c8b-4e08-a819-d9f1546c3d31"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CastSpell"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -133,6 +152,7 @@ public class @PlayerActionControls : IInputActionCollection, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
         m_Player_Stop = m_Player.FindAction("Stop", throwIfNotFound: true);
+        m_Player_CastSpell = m_Player.FindAction("CastSpell", throwIfNotFound: true);
         // GameMenu
         m_GameMenu = asset.FindActionMap("GameMenu", throwIfNotFound: true);
         m_GameMenu_ToggleOrBack = m_GameMenu.FindAction("ToggleOrBack", throwIfNotFound: true);
@@ -189,6 +209,7 @@ public class @PlayerActionControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_MousePosition;
     private readonly InputAction m_Player_Stop;
+    private readonly InputAction m_Player_CastSpell;
     public struct PlayerActions
     {
         private @PlayerActionControls m_Wrapper;
@@ -196,6 +217,7 @@ public class @PlayerActionControls : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @MousePosition => m_Wrapper.m_Player_MousePosition;
         public InputAction @Stop => m_Wrapper.m_Player_Stop;
+        public InputAction @CastSpell => m_Wrapper.m_Player_CastSpell;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -214,6 +236,9 @@ public class @PlayerActionControls : IInputActionCollection, IDisposable
                 @Stop.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStop;
                 @Stop.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStop;
                 @Stop.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStop;
+                @CastSpell.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCastSpell;
+                @CastSpell.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCastSpell;
+                @CastSpell.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCastSpell;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -227,6 +252,9 @@ public class @PlayerActionControls : IInputActionCollection, IDisposable
                 @Stop.started += instance.OnStop;
                 @Stop.performed += instance.OnStop;
                 @Stop.canceled += instance.OnStop;
+                @CastSpell.started += instance.OnCastSpell;
+                @CastSpell.performed += instance.OnCastSpell;
+                @CastSpell.canceled += instance.OnCastSpell;
             }
         }
     }
@@ -277,6 +305,7 @@ public class @PlayerActionControls : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
         void OnStop(InputAction.CallbackContext context);
+        void OnCastSpell(InputAction.CallbackContext context);
     }
     public interface IGameMenuActions
     {

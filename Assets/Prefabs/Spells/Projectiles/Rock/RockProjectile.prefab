@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3161777570979775366}
   - component: {fileID: 3161777570979775367}
   - component: {fileID: 3161777570979775384}
+  - component: {fileID: 1921855101794726906}
   m_Layer: 0
   m_Name: RockProjectile
   m_TagString: Untagged
@@ -102,3 +103,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1921855101794726906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3161777570979775365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d148a6136164942abaf1f64f79b3d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StartPos: {x: 0, y: 0}
+  EndPos: {x: 0, y: 0}
+  Speed: 0.1

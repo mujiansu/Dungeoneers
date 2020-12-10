@@ -5,6 +5,7 @@ using Steamworks;
 using UnityEngine;
 using Zenject;
 using Dungeoneer.Ui.InGame;
+using static Dungeoneer.Spells.Dungeoneer.Spells.SpellsController;
 
 namespace Dungeoneer.DI
 {
@@ -21,6 +22,7 @@ namespace Dungeoneer.DI
             Container.Bind<SceneTransition>().FromComponentOn(SceneTransition).AsSingle();
             Container.Bind<PlayerActionControls>().AsTransient();
             Container.BindInterfacesAndSelfTo<GameManager>().AsSingle().OnInstantiated<GameManager>((ctx, manager) => manager.PlayersContainer = PlayersContainer).NonLazy();
+            Container.DeclareSignal<SpellCastSignal>();
             Container.DeclareSignal<CanvasController.MenuStateChangeSignal>().OptionalSubscriber();
             Container.DeclareSignal<CanvasController.EnableMenuSignal>();
             Container.DeclareSignal<CanvasController.DisableMenuSignal>();
