@@ -1,4 +1,5 @@
-﻿using Dungeoneer.Managers;
+﻿using System;
+using Dungeoneer.Managers;
 using Dungeoneer.Players.Characters;
 using Dungeoneer.Steamworks;
 using Steamworks;
@@ -11,52 +12,17 @@ namespace Dungeoneer.Players
     public class Player : MonoBehaviour
     {
         public class Factory : PlaceholderFactory<CSteamID, Player> { }
-        public InputAction ToggleMenuAction;
 
         private GameManager _gameManager;
 
-        public CSteamID Owner { get; private set; }
-
         private Character _character;
+        private bool _isOwner;
 
         [Inject]
-        public void Constructor(CSteamID owner, GameManager gameManager, SignalBus signalBus)
+        public void Constructor(bool isOwner, GameManager gameManager, SignalBus signalBus, PlayerActionControls controls)
         {
-            Owner = owner;
-            signalBus.Subscribe<GameManager.CloseMenuSignal>(OnCloseMenuSignal);
-            signalBus.Subscribe<GameManager.OpenMenuSignal>(OnOpenMenuSignal);
+            _isOwner = isOwner;
             _gameManager = gameManager;
-        }
-
-        private void Start()
-        {
-            if (Owner == SteamHelpers.Me)
-            {
-                ToggleMenuAction.Enable();
-            }
-        }
-
-        private void OnDisable()
-        {
-            ToggleMenuAction.Disable();
-        }
-
-        private void OnOpenMenuSignal()
-        {
-            ToggleMenuAction.Disable();
-        }
-
-        private void OnCloseMenuSignal()
-        {
-            ToggleMenuAction.Enable();
-        }
-
-        private void Update()
-        {
-            if (ToggleMenuAction.triggered)
-            {
-                _gameManager.OpenMenu();
-            }
         }
     }
 

@@ -12,10 +12,6 @@ namespace Dungeoneer.Managers
 
     public class GameManager : IInitializable, IDisposable, ITickable
     {
-        public class OpenMenuSignal { }
-
-        public class CloseMenuSignal { }
-
         public GameObject PlayersContainer;
 
         private SignalBus _signalBus;
@@ -25,7 +21,6 @@ namespace Dungeoneer.Managers
 
         private Dictionary<CSteamID, Player> _players = new Dictionary<CSteamID, Player>();
 
-        private bool IsMenuOpen = false;
 
         [Inject]
         public void Constructor(SignalBus signalBus, LobbyManager lobbyManager, Player.Factory playerFactory, SceneChangingManager sceneManger)
@@ -74,24 +69,5 @@ namespace Dungeoneer.Managers
                 return x.Key;
             });
         }
-
-        public void OpenMenu()
-        {
-            IsMenuOpen = true;
-            _signalBus.Fire<OpenMenuSignal>();
-        }
-
-        public void CloseMenu()
-        {
-            IsMenuOpen = false;
-            _signalBus.Fire<CloseMenuSignal>();
-        }
-
-        public void ToggleMenu()
-        {
-            if (IsMenuOpen) CloseMenu();
-            else OpenMenu();
-        }
     }
-
 }

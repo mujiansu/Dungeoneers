@@ -207,7 +207,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1795533918179920276}
   - component: {fileID: 1795533918179920277}
-  - component: {fileID: 1795533918179920278}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -244,58 +243,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 4.5
---- !u!114 &1795533918179920278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1795533918179920267}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5a2811675916fd48925d7457ab0f0b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MousePosition:
-    m_Name: Mouse Position
-    m_Type: 0
-    m_ExpectedControlType: Vector2
-    m_Id: 4741c704-a463-40cf-b5fb-bb9e50b43e0b
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 9fac7bfa-a237-4376-b21d-d2dccbc64e22
-      m_Path: <Mouse>/position
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Mouse Position
-      m_Flags: 0
-  MovePlayer:
-    m_Name: Move Player
-    m_Type: 1
-    m_ExpectedControlType: Button
-    m_Id: e4b742e1-8af3-45a3-b47e-4f2a064b2166
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 1449fad7-2a7a-4fbd-b34d-c3fdcd258d0b
-      m_Path: <Mouse>/rightButton
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move Player
-      m_Flags: 0
-  Keystroke:
-    m_Name: Keystroke
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 05dfef66-c816-401e-91d1-41d318e076e5
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
 --- !u!1 &6413301566520049678
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,22 +289,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78ea268c738619d46a391e3f1033f0bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ToggleMenuAction:
-    m_Name: Toggle Menu
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 13ba533d-747d-4dd1-b85e-969881dc5e7e
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: a4206ea7-a176-47ac-b9cd-0a46b7929644
-      m_Path: <Keyboard>/escape
-      m_Interactions: Press
-      m_Processors: 
-      m_Groups: 
-      m_Action: Toggle Menu
-      m_Flags: 0
 --- !u!114 &6413301566520049679
 MonoBehaviour:
   m_ObjectHideFlags: 0

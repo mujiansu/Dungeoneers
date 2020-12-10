@@ -4,6 +4,7 @@ using Dungeoneer.Ui;
 using Steamworks;
 using UnityEngine;
 using Zenject;
+using Dungeoneer.Ui.InGame;
 
 namespace Dungeoneer.DI
 {
@@ -19,9 +20,11 @@ namespace Dungeoneer.DI
             Container.BindFactory<CSteamID, Player, Player.Factory>().FromSubContainerResolve().ByNewContextPrefab<PlayerInstaller>(PlayerPrefab).AsSingle();
             Container.Bind<PlayerCamera>().FromComponentOn(Camera).AsSingle();
             Container.Bind<SceneTransition>().FromComponentOn(SceneTransition).AsSingle();
+            Container.Bind<PlayerActionControls>().AsTransient();
             Container.BindInterfacesAndSelfTo<GameManager>().AsSingle().OnInstantiated<GameManager>((ctx, manager) => manager.PlayersContainer = PlayersContainer).NonLazy();
-            Container.DeclareSignal<GameManager.OpenMenuSignal>();
-            Container.DeclareSignal<GameManager.CloseMenuSignal>();
+            Container.DeclareSignal<CanvasController.MenuStateChangeSignal>().OptionalSubscriber();
+            Container.DeclareSignal<CanvasController.EnableMenuSignal>();
+            Container.DeclareSignal<CanvasController.DisableMenuSignal>();
         }
     }
 }
