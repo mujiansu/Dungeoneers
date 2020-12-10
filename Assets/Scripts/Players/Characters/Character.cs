@@ -105,7 +105,7 @@ namespace Dungeoneer.Players.Characters
 
         private void OnDestroy()
         {
-            _signalBus.Unsubscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
+            if (!_isOwner) _signalBus.Unsubscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
         }
     }
 }
