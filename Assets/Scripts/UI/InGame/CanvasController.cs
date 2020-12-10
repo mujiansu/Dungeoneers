@@ -40,7 +40,6 @@ namespace Dungeoneer.Ui.InGame
         {
             _signalBus.Subscribe<DisableMenuSignal>(OnDisableMenuSignal);
             _signalBus.Subscribe<EnableMenuSignal>(OnEnableMenuSignal);
-            _menuControls.Enable();
             _canvases.Add(CanvasType.StartMenu, StartMenuCanvas);
             _canvases.Add(CanvasType.InviteMenu, InviteMenuCanvas);
             _canvases.Add(CanvasType.ScoreScreen, ScoreScreenCanvas);

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Dungeoneer.Ui.InGame;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -63,10 +64,12 @@ namespace Dungeoneer.Ui
                 yield return null;
             }
             transform.gameObject.SetActive(false);
+            _signalBus.Fire<CanvasController.EnableMenuSignal>();
         }
 
         private IEnumerator FadeOut()
         {
+            _signalBus.Fire<CanvasController.DisableMenuSignal>();
             _fadeDeltaTime = 0f;
             var color = _image.color;
             var alpha = color.a;
