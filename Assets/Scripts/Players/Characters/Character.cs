@@ -52,8 +52,11 @@ namespace Dungeoneer.Players.Characters
 
         void Start()
         {
-            if (_isOwner) _playerActions.Enable();
-            if (_isOwner) _signalBus.Subscribe<CanvasController.MenuStateChangeSignal>(OnMenuStateChangeSignal);
+            if (_isOwner)
+            {
+                _playerActions.Enable();
+                _signalBus.Subscribe<CanvasController.MenuStateChangeSignal>(OnMenuStateChangeSignal);
+            }
             _signalBus.Subscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
             _physicsBody = GetComponentInChildren<PhysicsBody>();
             _moveLoc = _physicsBody.Pos;
