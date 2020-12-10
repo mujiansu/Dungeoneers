@@ -1,11 +1,12 @@
 using Dungeoneer.Players.Characters;
 using Dungeoneer.Steamworks;
 using Steamworks;
+using UnityEngine;
 using Zenject;
 
 namespace Dungeoneer.Players
 {
-    public class PlayerInstaller : MonoInstaller<PlayerInstaller>
+    public class PlayerInstaller : Installer<PlayerInstaller>
     {
         private CSteamID _owner;
 
@@ -19,8 +20,9 @@ namespace Dungeoneer.Players
         {
             Container.Bind<CSteamID>().FromInstance(_owner).AsSingle();
             Container.Bind<bool>().FromInstance(_owner == SteamHelpers.Me).AsSingle();
-            Container.Bind<Player>().FromComponentInHierarchy().AsSingle();
-            Container.Bind<Renderer>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<Transform>().FromComponentOnRoot().AsSingle();
+            Container.Bind<PlayerFacade>().AsSingle();
+            Container.Bind<Characters.Renderer>().FromComponentInHierarchy().AsSingle();
             Container.Bind<PhysicsBody>().FromComponentInHierarchy().AsSingle();
             Container.Bind<Character>().FromComponentInHierarchy().AsSingle();
         }

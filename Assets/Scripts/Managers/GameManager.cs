@@ -16,14 +16,14 @@ namespace Dungeoneer.Managers
 
         private SignalBus _signalBus;
         private LobbyManager _lobbyManager;
-        private Player.Factory _playerFactory;
+        private PlayerFacade.Factory _playerFactory;
         private SceneChangingManager _sceneManager;
 
-        private Dictionary<CSteamID, Player> _players = new Dictionary<CSteamID, Player>();
+        private Dictionary<CSteamID, PlayerFacade> _players = new Dictionary<CSteamID, PlayerFacade>();
 
 
         [Inject]
-        public void Constructor(SignalBus signalBus, LobbyManager lobbyManager, Player.Factory playerFactory, SceneChangingManager sceneManger)
+        public void Constructor(SignalBus signalBus, LobbyManager lobbyManager, PlayerFacade.Factory playerFactory, SceneChangingManager sceneManger)
         {
             _signalBus = signalBus;
             _lobbyManager = lobbyManager;
@@ -37,7 +37,7 @@ namespace Dungeoneer.Managers
             foreach (var member in _lobbyManager.Lobby.Members)
             {
                 var player = _playerFactory.Create(member);
-                player.transform.SetParent(PlayersContainer.transform);
+                player.SetParent(PlayersContainer);
                 _players.Add(member, player);
             }
         }
@@ -58,13 +58,13 @@ namespace Dungeoneer.Managers
                 if (!_players.ContainsKey(member))
                 {
                     var playerInst = _playerFactory.Create(member);
-                    playerInst.transform.SetParent(PlayersContainer.transform);
+                    playerInst.SetParent(PlayersContainer);
                     _players.Add(member, playerInst);
                 }
             }
             _players.Where(x => !_lobbyManager.Lobby.Members.Contains(x.Key)).Select(x =>
             {
-                GameObject.Destroy(x.Value.gameObject);
+                GameObject.Destroy(x.Value.GameObject);
                 _players.Remove(x.Key);
                 return x.Key;
             });

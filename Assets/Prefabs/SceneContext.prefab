@@ -397,7 +397,7 @@ MonoBehaviour:
   PlayersContainer: {fileID: 7130259255344988217}
   Camera: {fileID: 2528874948347435515}
   SceneTransition: {fileID: 4459123028546154754}
-  PlayerPrefab: {fileID: 7274504975814648156, guid: 8f00c7d8dce51524891e6a2503b66e3f,
+  PlayerPrefab: {fileID: 6413301566520049678, guid: 8f00c7d8dce51524891e6a2503b66e3f,
     type: 3}
 --- !u!1 &7130259255344988217
 GameObject:

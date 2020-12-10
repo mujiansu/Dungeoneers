@@ -9,9 +9,9 @@ using Zenject;
 
 namespace Dungeoneer.Players
 {
-    public class PlayerFacade
+    public class Player
     {
-        public class Factory : PlaceholderFactory<CSteamID, PlayerFacade> { }
+        public class Factory : PlaceholderFactory<CSteamID, Player> { }
         private Transform _transform;
 
         public GameObject GameObject => _transform.gameObject;

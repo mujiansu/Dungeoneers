@@ -11,13 +11,12 @@ namespace Dungeoneer.DI
     public class GameSceneInstaller : MonoInstaller
     {
         public GameObject PlayersContainer;
-
         public GameObject Camera;
         public GameObject SceneTransition;
-        public Player PlayerPrefab;
+        public GameObject PlayerPrefab;
         public override void InstallBindings()
         {
-            Container.BindFactory<CSteamID, Player, Player.Factory>().FromSubContainerResolve().ByNewContextPrefab<PlayerInstaller>(PlayerPrefab).AsSingle();
+            Container.BindFactory<CSteamID, PlayerFacade, PlayerFacade.Factory>().FromSubContainerResolve().ByNewPrefabInstaller<PlayerInstaller>(PlayerPrefab).AsSingle();
             Container.Bind<PlayerCamera>().FromComponentOn(Camera).AsSingle();
             Container.Bind<SceneTransition>().FromComponentOn(SceneTransition).AsSingle();
             Container.Bind<PlayerActionControls>().AsTransient();
