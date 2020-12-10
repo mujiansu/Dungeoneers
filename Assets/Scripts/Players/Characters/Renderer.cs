@@ -50,7 +50,7 @@ namespace Dungeoneer.Players.Characters
             transform.position = Vector2.Lerp(_prevPos, _newPos, elapsedTime);
             if (_isOwner)
             {
-                _camera.SetPos(transform.position);
+                _camera.PlayerPos = transform.position;
             }
         }
 

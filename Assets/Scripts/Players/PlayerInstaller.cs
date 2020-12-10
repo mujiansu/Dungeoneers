@@ -1,4 +1,5 @@
 using Dungeoneer.Players.Characters;
+using Dungeoneer.Spells.Dungeoneer.Spells;
 using Dungeoneer.Steamworks;
 using Steamworks;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace Dungeoneer.Players
             Container.Bind<CSteamID>().FromInstance(_owner).AsSingle();
             Container.Bind<bool>().FromInstance(_owner == SteamHelpers.Me).AsSingle();
             Container.Bind<Transform>().FromComponentOnRoot().AsSingle();
+            Container.Bind<SpellsController>().FromComponentInHierarchy().AsSingle();
             Container.Bind<PlayerFacade>().AsSingle();
             Container.Bind<Characters.Renderer>().FromComponentInHierarchy().AsSingle();
             Container.Bind<PhysicsBody>().FromComponentInHierarchy().AsSingle();

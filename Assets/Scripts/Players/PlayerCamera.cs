@@ -9,10 +9,24 @@ namespace Dungeoneer.Players
     {
 
         private const float _zPos = -5;
+        private Vector3 _desiredPos;
+        private const float _speed = 7f;
+        public Vector2 PlayerPos { set => _desiredPos = new Vector3(value.x, value.y, _zPos); }
+        private Vector3 _prevPos;
+        private Vector3 _nextPos;
+        private float _timeBetweenUpdates = 0f;
 
-        public void SetPos(Vector2 pos)
+        private void Update()
         {
-            transform.position = new Vector3(pos.x, pos.y, _zPos);
+            _timeBetweenUpdates += Time.smoothDeltaTime;
+            transform.position = Vector3.Lerp(_prevPos, _nextPos, _timeBetweenUpdates / Time.fixedDeltaTime);
+        }
+
+        private void FixedUpdate()
+        {
+            _timeBetweenUpdates = 0f;
+            _prevPos = transform.position;
+            _nextPos = Vector3.Lerp(transform.position, _desiredPos, (_speed * Time.fixedDeltaTime));
         }
     }
 }
