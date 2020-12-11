@@ -27,6 +27,7 @@ namespace Dungeoneer.Spells.Projectiles
 
         void Start()
         {
+            _controls.CastSpell.Disable();
             transform.position = _renderer.Pos + (((Vector2)Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>()) - _renderer.Pos).normalized * floatDistance);
         }
 
@@ -53,8 +54,9 @@ namespace Dungeoneer.Spells.Projectiles
             {
                 var mousePos = (Vector2)Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
                 transform.position = _renderer.Pos + ((mousePos - _renderer.Pos).normalized * floatDistance);
-                if (_controls.CastSpell.triggered)
+                if (_controls.CastSpell2.triggered)
                 {
+                    _controls.CastSpell.Enable();
                     StartPos = transform.position;
                     EndPos = mousePos;
                     StartCoroutine(nameof(MoveCoroutine));
