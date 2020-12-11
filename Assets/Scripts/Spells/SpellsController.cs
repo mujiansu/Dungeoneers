@@ -1,4 +1,5 @@
-﻿using Dungeoneer.Spells.Projectiles;
+﻿using Dungeoneer.Players.Characters;
+using Dungeoneer.Spells.Projectiles;
 using Steamworks;
 using UnityEngine;
 using Zenject;
@@ -11,47 +12,47 @@ namespace Dungeoneer.Spells
         {
             public Rock RockProjectile;
             private SignalBus _signalBus;
+            private CharacterRenderer _renderer;
+            private Rock.Factory _rockFactory;
+            private CSteamID _owner;
+            private PlayerActionControls.PlayerActions _controls;
 
             public class SpellCastSignal
             {
                 public SpellElement Element { get; private set; }
                 public SpellType Type { get; private set; }
-                public CSteamID Caster { get; private set; }
-                public Vector2 CastPos { get; private set; }
-                public Vector2 TargetPos { get; private set; }
-                public SpellCastSignal(CSteamID caster, SpellElement element, SpellType type, Vector2 castPos, Vector2 targetPos)
+                public Vector2 TargetPos { get; set; }
+
+                public SpellCastSignal(SpellElement element, SpellType type, Vector2 targetPos)
                 {
                     Element = element;
                     Type = type;
-                    Caster = caster;
-                    CastPos = castPos;
                     TargetPos = targetPos;
                 }
             }
 
             [Inject]
-            public void Constructor(SignalBus signalBus)
+            public void Constructor(CSteamID owner, SignalBus signalBus, PlayerActionControls.PlayerActions controls, CharacterRenderer renderer, Rock.Factory rockFactory)
             {
+                _owner = owner;
                 _signalBus = signalBus;
+                _controls = controls;
+                _renderer = renderer;
+                _rockFactory = rockFactory;
             }
 
-            // Start is called before the first frame update
-            void Start()
+            private void Update()
             {
-                _signalBus.Subscribe<SpellCastSignal>(OnSpellCastSignal);
-            }
-
-            private void OnSpellCastSignal(SpellCastSignal signal)
-            {
-                if (signal.Element == SpellElement.Rock)
+                if (_controls.CastSpell.triggered)
                 {
-                    if (signal.Type == SpellType.Projectile)
-                    {
-                        var projectile = Instantiate(RockProjectile);
-                        projectile.transform.SetParent(gameObject.transform);
-                        projectile.StartPos = signal.CastPos;
-                        projectile.EndPos = signal.TargetPos;
-                    }
+                    var projectile = _rockFactory.Create(RockProjectile);
+                    projectile.transform.SetParent(gameObject.transform);
+                    projectile.EndPos = Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
+                    _signalBus.Fire<SpellCastSignal>(new SpellCastSignal(
+                        SpellElement.Rock,
+                        SpellType.Projectile,
+                        projectile.EndPos
+                    ));
                 }
             }
         }

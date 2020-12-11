@@ -19,7 +19,9 @@ namespace Dungeoneer.Players
         private void Update()
         {
             _timeBetweenUpdates += Time.smoothDeltaTime;
-            transform.position = Vector3.Lerp(_prevPos, _nextPos, _timeBetweenUpdates / Time.fixedDeltaTime);
+            var pos = Vector3.Lerp(_prevPos, _nextPos, _timeBetweenUpdates / Time.fixedDeltaTime);
+            pos.z = _zPos;
+            transform.position = pos;
         }
 
         private void FixedUpdate()

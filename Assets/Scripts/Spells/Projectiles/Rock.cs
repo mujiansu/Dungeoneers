@@ -1,27 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Dungeoneer.Players.Characters;
 using UnityEngine;
+using Zenject;
 
 namespace Dungeoneer.Spells.Projectiles
 {
     public class Rock : MonoBehaviour
     {
+        public class Factory : PlaceholderFactory<Object, Rock> { }
         public Vector2 StartPos;
         public Vector2 EndPos;
-
         public float Speed;
+        private CharacterRenderer _renderer;
+        private PlayerActionControls.PlayerActions _controls;
 
-        public
-        void Start()
+        private float floatDistance = 1f;
+        private bool shot = false;
+
+        [Inject]
+        public void Constructor(CharacterRenderer renderer, PlayerActionControls.PlayerActions controls)
         {
-            transform.position = StartPos;
-            StartCoroutine(nameof(MoveCoroutine));
+            _renderer = renderer;
+            _controls = controls;
         }
 
-        // Update is called once per frame
-        void Update()
+        void Start()
         {
-
+            transform.position = _renderer.Pos + (((Vector2)Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>()) - _renderer.Pos).normalized * floatDistance);
         }
 
         public IEnumerator MoveCoroutine()
@@ -39,6 +45,22 @@ namespace Dungeoneer.Spells.Projectiles
             }
             Destroy(gameObject);
             //Explode at end of coroutine.
+        }
+
+        private void Update()
+        {
+            if (!shot)
+            {
+                var mousePos = (Vector2)Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
+                transform.position = _renderer.Pos + ((mousePos - _renderer.Pos).normalized * floatDistance);
+                if (_controls.CastSpell.triggered)
+                {
+                    StartPos = transform.position;
+                    EndPos = mousePos;
+                    StartCoroutine(nameof(MoveCoroutine));
+                    shot = true;
+                }
+            }
         }
     }
 }

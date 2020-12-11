@@ -1,12 +1,9 @@
-﻿using Dungeoneer.Players;
-using Dungeoneer.Steamworks;
-using Steamworks;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 namespace Dungeoneer.Players.Characters
 {
-    public class Renderer : MonoBehaviour
+    public class CharacterRenderer : MonoBehaviour
     {
         private PhysicsBody _physicsBody;
         private Animator _animator;
@@ -16,6 +13,7 @@ namespace Dungeoneer.Players.Characters
         private bool _posChanged = false;
         private PlayerCamera _camera;
         private bool _isOwner;
+        public Vector2 Pos => transform.position;
 
         [Inject]
         public void Constructor(bool isOwner, PlayerCamera camera, PhysicsBody physicsBody)

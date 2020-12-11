@@ -18,7 +18,7 @@ namespace Dungeoneer.Players.Characters
         public float Speed = 1f;
         private PhysicsBody _physicsBody;
         private Vector2 _moveLoc;
-        private PlayerActionControls.PlayerActions _playerActions;
+        private PlayerActionControls.PlayerActions _controls;
         private CSteamID _owner;
         private bool _isOwner;
 
@@ -27,9 +27,9 @@ namespace Dungeoneer.Players.Characters
         private SignalBus _signalBus;
 
         [Inject]
-        public void Constructor(CSteamID owner, SignalBus signalBus, NetworkingManager networkingManager, PhysicsBody physicsBody, PlayerActionControls controls)
+        public void Constructor(CSteamID owner, SignalBus signalBus, NetworkingManager networkingManager, PhysicsBody physicsBody, PlayerActionControls.PlayerActions controls)
         {
-            _playerActions = controls.Player;
+            _controls = controls;
             _owner = owner;
             _isOwner = _owner == SteamHelpers.Me;
             _networkingManager = networkingManager;
@@ -39,8 +39,8 @@ namespace Dungeoneer.Players.Characters
 
         private void OnMenuStateChangeSignal(MenuStateChangeSignal signal)
         {
-            if (signal.IsOpen) _playerActions.Disable();
-            else _playerActions.Enable();
+            if (signal.IsOpen) _controls.Disable();
+            else _controls.Enable();
         }
 
         private void OnCharacterPacket(PacketSignal<CharacterPacket> packet)
@@ -55,7 +55,7 @@ namespace Dungeoneer.Players.Characters
         {
             if (_isOwner)
             {
-                _playerActions.Enable();
+                _controls.Enable();
                 _signalBus.Subscribe<CanvasController.MenuStateChangeSignal>(OnMenuStateChangeSignal);
             }
             if (!_isOwner) _signalBus.Subscribe<PacketSignal<CharacterPacket>>(OnCharacterPacket);
@@ -68,20 +68,11 @@ namespace Dungeoneer.Players.Characters
         {
             if (_isOwner)
             {
-                if (_playerActions.Move.ReadValue<float>() > 0)
+                if (_controls.Move.ReadValue<float>() > 0)
                 {
-                    _moveLoc = UnityEngine.Camera.main.ScreenToWorldPoint(_playerActions.MousePosition.ReadValue<Vector2>());
+                    _moveLoc = Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
                 }
-                if (_playerActions.CastSpell.triggered)
-                {
-                    _signalBus.Fire<SpellCastSignal>(new SpellCastSignal(
-                        _owner,
-                        SpellElement.Rock,
-                        SpellType.Projectile,
-                        _physicsBody.Pos,
-                        UnityEngine.Camera.main.ScreenToWorldPoint(_playerActions.MousePosition.ReadValue<Vector2>()))
-                    );
-                }
+
             }
         }
 
