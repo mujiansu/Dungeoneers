@@ -68,8 +68,11 @@ namespace Dungeoneer.Managers
 
         public void SendPacketToPlayer<T>(CSteamID member, T data, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)
         {
-            var packet = MessagePackSerializer.Serialize(data);
-            if (member != SteamHelpers.Me) SteamHelpers.SendPacket(member, packet, _packetDictionary[typeof(T)], protocol);
+            if (_lobbyManager.Lobby.IsInLobby)
+            {
+                var packet = MessagePackSerializer.Serialize(data);
+                if (member != SteamHelpers.Me) SteamHelpers.SendPacket(member, packet, _packetDictionary[typeof(T)], protocol);
+            }
         }
 
         public void SendPacketToHost<T>(T data, EP2PSend protocol = EP2PSend.k_EP2PSendUnreliable)

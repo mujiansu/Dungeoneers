@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Dungeoneer.Netowrking.Packets;
+using Dungeoneer.Spells.Dungeoneer.Spells;
 using MessagePack;
 using MessagePack.Formatters;
 using UnityEngine;
@@ -33,7 +34,8 @@ namespace Dungeoneer.Netowrking
         private static readonly Dictionary<Type, object> FormatterMap = new Dictionary<Type, object>()
     {
         {typeof(CharacterPacket), new CharacterPacketFormatter()},
-        {typeof(SceneChangePacket), new SceneChangePacketFormatter()}
+        {typeof(SceneChangePacket), new SceneChangePacketFormatter()},
+        {typeof(SpellPacket), new SpellPacketFormatter()}
     };
 
         internal static object GetFormatter(Type t)
@@ -132,6 +134,60 @@ namespace Dungeoneer.Netowrking
             IFormatterResolver resolver = options.Resolver;
             writer.WriteArrayHeader(1);
             resolver.GetFormatterWithVerify<Scene>().Serialize(ref writer, value.Scene, options);
+        }
+    }
+
+    public sealed class SpellPacketFormatter : IMessagePackFormatter<SpellPacket>
+    {
+        public SpellPacket Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+        {
+            if (reader.IsNil)
+            {
+                throw new InvalidOperationException("typecode is null, struct not supported");
+            }
+
+            IFormatterResolver resolver = options.Resolver;
+            var length = reader.ReadArrayHeader();
+
+            var x = default(Spell);
+            var y = default(Vector2);
+            var z = default(SpellAction);
+            for (int i = 0; i < length; i++)
+            {
+                var key = i;
+                switch (key)
+                {
+                    case 0:
+                        x = resolver.GetFormatterWithVerify<Spell>().Deserialize(ref reader, options);
+                        break;
+                    case 1:
+                        y = resolver.GetFormatterWithVerify<Vector2>().Deserialize(ref reader, options);
+                        break;
+                    case 2:
+                        z = resolver.GetFormatterWithVerify<SpellAction>().Deserialize(ref reader, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            var result = new SpellPacket
+            {
+                Spell = x,
+                Pos = y,
+                Action = z
+            };
+            return result;
+        }
+
+        public void Serialize(ref MessagePackWriter writer, SpellPacket value, MessagePackSerializerOptions options)
+        {
+            IFormatterResolver resolver = options.Resolver;
+            writer.WriteArrayHeader(3);
+            resolver.GetFormatterWithVerify<Spell>().Serialize(ref writer, value.Spell, options);
+            resolver.GetFormatterWithVerify<Vector2>().Serialize(ref writer, value.Pos, options);
+            resolver.GetFormatterWithVerify<SpellAction>().Serialize(ref writer, value.Action, options);
         }
     }
 }

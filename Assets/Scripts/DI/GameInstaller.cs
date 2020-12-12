@@ -25,6 +25,7 @@ namespace Dungeoneer.DI
         {
             Container.DeclareSignal<NetworkingManager.PacketSignal<CharacterPacket>>();
             Container.DeclareSignal<NetworkingManager.PacketSignal<SceneChangePacket>>();
+            Container.DeclareSignal<NetworkingManager.PacketSignal<SpellPacket>>();
         }
     }
 
