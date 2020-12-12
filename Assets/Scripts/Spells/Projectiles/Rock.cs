@@ -8,6 +8,7 @@ namespace Dungeoneer.Spells.Projectiles
 {
     public class Rock : MonoBehaviour
     {
+        public EarthExplosion Explosion;
         public class Factory : PlaceholderFactory<Object, Rock> { }
         public Vector2 StartPos;
         public Vector2 EndPos;
@@ -44,6 +45,8 @@ namespace Dungeoneer.Spells.Projectiles
                 transform.position = Vector2.Lerp(StartPos, EndPos, interval);
                 yield return null;
             }
+            var explosion = Instantiate(Explosion, transform.position, Quaternion.identity);
+            explosion.transform.SetParent(transform.parent);
             Destroy(gameObject);
             //Explode at end of coroutine.
         }

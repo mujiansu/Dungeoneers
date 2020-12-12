@@ -115,6 +115,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8d148a6136164942abaf1f64f79b3d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Explosion: {fileID: 6293034515395661663, guid: 801d786a899838c469903c6feb25f7ef,
+    type: 3}
   StartPos: {x: 0, y: 0}
   EndPos: {x: 0, y: 0}
   Speed: 0.1
