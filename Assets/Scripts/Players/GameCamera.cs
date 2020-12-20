@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Dungeoneer.Players
 {
-    public class PlayerCamera : MonoBehaviour
+    public class GameCamera : MonoBehaviour
     {
 
         private const float _zPos = -5;
@@ -15,6 +15,13 @@ namespace Dungeoneer.Players
         private Vector3 _prevPos;
         private Vector3 _nextPos;
         private float _timeBetweenUpdates = 0f;
+        private Camera _camera;
+
+        private void Awake()
+        {
+            _camera = GetComponent<Camera>();
+
+        }
 
         private void Update()
         {
@@ -29,6 +36,11 @@ namespace Dungeoneer.Players
             _timeBetweenUpdates = 0f;
             _prevPos = transform.position;
             _nextPos = Vector3.Lerp(transform.position, _desiredPos, (_speed * Time.fixedDeltaTime));
+        }
+
+        public Vector2 ScreenToWorldPoint(Vector2 mousePosition)
+        {
+            return _camera.ScreenToWorldPoint(mousePosition);
         }
     }
 }

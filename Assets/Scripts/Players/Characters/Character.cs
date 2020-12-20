@@ -17,6 +17,7 @@ namespace Dungeoneer.Players.Characters
 
         public float Speed = 1f;
         private PhysicsBody _physicsBody;
+        private GameCamera _camera;
         private Vector2 _moveLoc;
         private PlayerActionControls.PlayerActions _controls;
         private CSteamID _owner;
@@ -27,7 +28,7 @@ namespace Dungeoneer.Players.Characters
         private SignalBus _signalBus;
 
         [Inject]
-        public void Constructor(CSteamID owner, SignalBus signalBus, NetworkingManager networkingManager, PhysicsBody physicsBody, PlayerActionControls.PlayerActions controls)
+        public void Constructor(CSteamID owner, SignalBus signalBus, NetworkingManager networkingManager, PhysicsBody physicsBody, PlayerActionControls.PlayerActions controls, GameCamera camera)
         {
             _controls = controls;
             _owner = owner;
@@ -35,6 +36,7 @@ namespace Dungeoneer.Players.Characters
             _networkingManager = networkingManager;
             _signalBus = signalBus;
             _physicsBody = physicsBody;
+            _camera = camera;
         }
 
         private void OnMenuStateChangeSignal(MenuStateChangeSignal signal)
@@ -70,7 +72,7 @@ namespace Dungeoneer.Players.Characters
             {
                 if (_controls.Move.ReadValue<float>() > 0)
                 {
-                    _moveLoc = Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
+                    _moveLoc = _camera.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
                 }
 
             }

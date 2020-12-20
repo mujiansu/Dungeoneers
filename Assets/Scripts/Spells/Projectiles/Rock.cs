@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using Dungeoneer.Managers;
 using Dungeoneer.Netowrking.Packets;
+using Dungeoneer.Players;
 using Dungeoneer.Players.Characters;
 using Dungeoneer.Spells.Dungeoneer.Spells;
 using Steamworks;
@@ -24,12 +24,12 @@ namespace Dungeoneer.Spells.Projectiles
         private NetworkingManager _networkingManager;
         private CharacterRenderer _renderer;
         private PlayerActionControls.PlayerActions _controls;
-
+        private GameCamera _camera;
         private float floatDistance = 1f;
         private bool shot = false;
 
         [Inject]
-        public void Constructor(CSteamID owner, bool isOwner, SignalBus signalBus, NetworkingManager networkingManager, CharacterRenderer renderer, PlayerActionControls.PlayerActions controls)
+        public void Constructor(CSteamID owner, bool isOwner, SignalBus signalBus, NetworkingManager networkingManager, CharacterRenderer renderer, PlayerActionControls.PlayerActions controls, GameCamera camera)
         {
             _isOwner = isOwner;
             _owner = owner;
@@ -37,13 +37,14 @@ namespace Dungeoneer.Spells.Projectiles
             _networkingManager = networkingManager;
             _renderer = renderer;
             _controls = controls;
+            _camera = camera;
         }
 
         void Start()
         {
             _signalBus.Subscribe<PacketSignal<SpellPacket>>(OnSpellPacketSignal);
             _controls.CastSpell.Disable();
-            transform.position = _renderer.Pos + (((Vector2)Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>()) - _renderer.Pos).normalized * floatDistance);
+            transform.position = _renderer.Pos + ((_camera.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>()) - _renderer.Pos).normalized * floatDistance);
         }
 
         private void OnSpellPacketSignal(PacketSignal<SpellPacket> signal)
@@ -86,22 +87,26 @@ namespace Dungeoneer.Spells.Projectiles
         {
             if (_isOwner && !shot)
             {
-                var mousePos = (Vector2)Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
+                var mousePos = _camera.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
                 transform.position = _renderer.Pos + ((mousePos - _renderer.Pos).normalized * floatDistance);
                 if (_controls.CastSpell2.triggered)
                 {
-                    _networkingManager.SendPacketToAllPlayers(new SpellPacket
-                    {
-                        Spell = Spell.Boulder,
-                        Action = SpellAction.Shoot,
-                        Pos = mousePos
-                    });
                     _controls.CastSpell.Enable();
                     StartPos = transform.position;
                     EndPos = mousePos;
                     StartCoroutine(nameof(MoveCoroutine));
                 }
             }
+        }
+
+        private void FixedUpdate()
+        {
+            _networkingManager.SendPacketToAllPlayers(new SpellPacket
+            {
+                Spell = Spell.Boulder,
+                Action = SpellAction.Shoot,
+                Pos = transform.position
+            });
         }
     }
 }

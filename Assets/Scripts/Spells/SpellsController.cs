@@ -1,6 +1,7 @@
 ﻿using System;
 using Dungeoneer.Managers;
 using Dungeoneer.Netowrking.Packets;
+using Dungeoneer.Players;
 using Dungeoneer.Players.Characters;
 using Dungeoneer.Spells.Projectiles;
 using Steamworks;
@@ -19,6 +20,7 @@ namespace Dungeoneer.Spells
             private NetworkingManager _networkingManager;
             private CharacterRenderer _renderer;
             private Rock.Factory _rockFactory;
+            private GameCamera _camera;
             private CSteamID _owner;
             private PlayerActionControls.PlayerActions _controls;
 
@@ -35,7 +37,7 @@ namespace Dungeoneer.Spells
             }
 
             [Inject]
-            public void Constructor(CSteamID owner, SignalBus signalBus, NetworkingManager networkingManager, PlayerActionControls.PlayerActions controls, CharacterRenderer renderer, Rock.Factory rockFactory)
+            public void Constructor(CSteamID owner, SignalBus signalBus, NetworkingManager networkingManager, PlayerActionControls.PlayerActions controls, CharacterRenderer renderer, Rock.Factory rockFactory, GameCamera gameCamera)
             {
                 _owner = owner;
                 _signalBus = signalBus;
@@ -43,6 +45,7 @@ namespace Dungeoneer.Spells
                 _controls = controls;
                 _renderer = renderer;
                 _rockFactory = rockFactory;
+                _camera = gameCamera;
             }
 
             private void Start()
@@ -60,7 +63,7 @@ namespace Dungeoneer.Spells
                         {
                             var projectile = _rockFactory.Create(RockProjectile);
                             projectile.transform.SetParent(gameObject.transform);
-                            projectile.EndPos = Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
+                            projectile.EndPos = _camera.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
                         }
                     }
                 }
@@ -72,7 +75,7 @@ namespace Dungeoneer.Spells
                 {
                     var projectile = _rockFactory.Create(RockProjectile);
                     projectile.transform.SetParent(gameObject.transform);
-                    projectile.EndPos = Camera.main.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
+                    projectile.EndPos = _camera.ScreenToWorldPoint(_controls.MousePosition.ReadValue<Vector2>());
                     _signalBus.Fire<SpellCastSignal>(new SpellCastSignal(
                         Spell.Boulder,
                         projectile.EndPos

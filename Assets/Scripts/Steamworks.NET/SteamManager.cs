@@ -88,7 +88,7 @@ namespace Dungeoneer.Steamworks
             if (!_initalized)
             {
                 Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.");
-
+                Application.Quit();
                 return;
             }
 

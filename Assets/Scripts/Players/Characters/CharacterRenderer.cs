@@ -11,12 +11,12 @@ namespace Dungeoneer.Players.Characters
         private Vector2 _newPos;
         private float _deltaTime;
         private bool _posChanged = false;
-        private PlayerCamera _camera;
+        private GameCamera _camera;
         private bool _isOwner;
         public Vector2 Pos => transform.position;
 
         [Inject]
-        public void Constructor(bool isOwner, PlayerCamera camera, PhysicsBody physicsBody)
+        public void Constructor(bool isOwner, GameCamera camera, PhysicsBody physicsBody)
         {
             _isOwner = isOwner;
             _camera = camera;
